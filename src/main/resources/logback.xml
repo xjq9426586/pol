@@ -1,0 +1,39 @@
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <!-- 动态日志级别 -->
+    <jmxConfigurator />
+    <!-- 定义日志文件 输出位置 -->
+    <!-- <property name="log_dir" value="C:/test" />-->
+    <property name="log_dir" value="C:/test/logs" />
+    <!-- 日志最大的历史 30天 -->
+    <property name="maxHistory" value="90" />
+
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%p] - %m%n"/>
+
+    <!-- ConsoleAppender 控制台输出日志 -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="pol">
+        <file>${log_dir}/pol.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log_dir}/pol.%d{yyyy-MM-dd-HH}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+
+
+    <root>
+        <level value="debug" />
+        <appender-ref ref="console" />
+         <appender-ref ref="pol"/>
+    </root>
+</configuration>
