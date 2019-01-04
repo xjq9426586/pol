@@ -34,9 +34,9 @@ public class cf {
 		i.add(4);
 		System.out.println(StringUtils.join(i,","));
 		System.out.println(i.subList((p-1)*s, p*s).toString());
-		Unit u = new Unit();
-		u.setId(1);
-		System.out.println(u);
+//		Unit u = new Unit();
+//		u.setId(1);
+//		System.out.println(u);
 		
 	}
 	public static int byteArrayToInt(byte[] bytes) {  
