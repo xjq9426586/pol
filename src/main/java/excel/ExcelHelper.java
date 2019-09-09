@@ -112,10 +112,10 @@ public abstract class ExcelHelper {
             String[] fieldNames) throws Exception {
         writeExcel(clazz, dataModels, fieldNames, fieldNames);
     }
- 
+
     /**
      * 抽象方法：写入数据到指定excel文件中，由子类实现
-     * 
+     *
      * @param clazz
      *            数据类型
      * @param dataModels
@@ -196,7 +196,7 @@ public abstract class ExcelHelper {
         String[] fieldNames = new String[]{"id", "name", "age", "job",
                 "salery", "addtime"};
         try {
-            File file1 = new File("E:\\JXL2003.xls");
+           /* File file1 = new File("E:\\JXL2003.xls");
             ExcelHelper eh1 = JxlExcelHelper.getInstance(file1);
 //            String s=eh1.excelToJson(fieldNames, true);
 //            System.out.println(s);
@@ -207,8 +207,8 @@ public abstract class ExcelHelper {
             System.out.println("-----------------JXL2003.xls-----------------");
             for (Employee user : list1) {
                 System.out.println(user);
-            }
-           /* File file2 = new File("E:\\POI2003.xls");
+            }*/
+            File file2 = new File("C:\\Users\\Administrator\\Desktop\\excel.xls");
             ExcelHelper eh2 = HssfExcelHelper.getInstance(file2);
             eh2.writeExcel(Employee.class, employees);
             eh2.writeExcel(Employee.class, employees, fieldNames, titles);
@@ -218,16 +218,16 @@ public abstract class ExcelHelper {
             for (Employee user : list2) {
                 System.out.println(user);
             }
-            File file3 = new File("E:\\POI2007.xlsx");
-            ExcelHelper eh3 = XssfExcelHelper.getInstance(file3);
-            eh3.writeExcel(Employee.class, employees);
-            eh3.writeExcel(Employee.class, employees, fieldNames, titles);
-            List<Employee> list3 = eh3.readExcel(Employee.class, fieldNames,
-                    true);
-            System.out.println("-----------------POI2007.xls-----------------");
-            for (Employee user : list3) {
-                System.out.println(user);
-            }*/
+//            File file3 = new File("C:\\Users\\Administrator\\Desktop\\excel.xls");
+//            ExcelHelper eh3 = XssfExcelHelper.getInstance(file3);
+//            //eh3.writeExcel(Employee.class, employees);
+//            eh3.writeExcel(Employee.class, employees, fieldNames, titles);
+//            List<Employee> list3 = eh3.readExcel(Employee.class, fieldNames,
+//                    true);
+//            System.out.println("-----------------POI2007.xlsx-----------------");
+//            for (Employee user : list3) {
+//                System.out.println(user);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

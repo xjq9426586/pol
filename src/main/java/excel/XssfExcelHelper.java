@@ -4,21 +4,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
- 
+import java.text.Collator;
+import java.util.*;
+
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
- 
- 
+import org.apache.poi.xssf.usermodel.*;
+
+
 /**
  * 基于POI实现的Excel工具类
  * 
@@ -127,7 +121,8 @@ public class XssfExcelHelper extends ExcelHelper {
         }
         return dataModels;
     }
- 
+
+
     @Override
     public <T> void writeExcel(Class<T> clazz, List<T> dataModels,
             String[] fieldNames, String[] titles) throws Exception {
@@ -142,6 +137,7 @@ public class XssfExcelHelper extends ExcelHelper {
         // 根据当前工作表数量创建相应编号的工作表
         String sheetName = DateUtil.format(new Date(), "yyyyMMddHHmmssSS");
         XSSFSheet sheet = workbook.createSheet(sheetName);
+        //XSSFSheet sheet = workbook.getSheetAt(0);
         XSSFRow headRow = sheet.createRow(0);
         // 添加表格标题
         for (int i = 0; i < titles.length; i++) {
@@ -159,6 +155,7 @@ public class XssfExcelHelper extends ExcelHelper {
             // 设置单元格宽度
             sheet.setColumnWidth(i, titles[i].length() * 1000);
         }
+
         // 添加表格内容
         for (int i = 0; i < dataModels.size(); i++) {
             T target = dataModels.get(i);
@@ -243,4 +240,17 @@ public class XssfExcelHelper extends ExcelHelper {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+    public static void main(String[] args) {
+        List<String> l = new ArrayList();
+        l.add("打火机；");
+        l.add("好久好久离开家");
+        System.out.println(Collections.max(l));
+
+        String s = "数据是是";
+        String s1 = "好尴尬过过所";
+        Collator instance = Collator.getInstance(Locale.CHINA);
+
+        System.out.println(instance.compare(s, s1));
+    }
 }

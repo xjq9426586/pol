@@ -16,9 +16,9 @@ import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Font;
- 
- 
+import org.apache.poi.ss.usermodel.*;
+
+
 /**
  * 基于POI实现的Excel工具类
  * 
@@ -91,11 +91,11 @@ public class HssfExcelHelper extends ExcelHelper {
             int sheetNo, boolean hasTitle) throws Exception {
         List<T> dataModels = new ArrayList<T>();
         // 获取excel工作簿
-        HSSFWorkbook workbook = new HSSFWorkbook(new FileInputStream(file));
-        HSSFSheet sheet = workbook.getSheetAt(sheetNo);
+        Workbook workbook = WorkbookFactory.create(new FileInputStream(file));
+        Sheet sheet = workbook.getSheetAt(sheetNo);
         int start = sheet.getFirstRowNum() + (hasTitle ? 1 : 0); // 如果有标题则从第二行开始
         for (int i = start; i <= sheet.getLastRowNum(); i++) {
-            HSSFRow row = sheet.getRow(i);
+            Row row = sheet.getRow(i);
             if (row == null) {
                 continue;
             }
@@ -107,7 +107,7 @@ public class HssfExcelHelper extends ExcelHelper {
                     continue; // 过滤serialVersionUID属性
                 }
                 // 获取excel单元格的内容
-                HSSFCell cell = row.getCell(j);
+                Cell cell = row.getCell(j);
                 if (cell == null) {
                     continue;
                 }
@@ -131,26 +131,27 @@ public class HssfExcelHelper extends ExcelHelper {
     @Override
     public <T> void writeExcel(Class<T> clazz, List<T> dataModels,
             String[] fieldNames, String[] titles) throws Exception {
-        HSSFWorkbook workbook = null;
+        //HSSFWorkbook workbook = null;
+        Workbook workbook = null;
         // 检测文件是否存在，如果存在则修改文件，否则创建文件
         if (file.exists()) {
             FileInputStream fis = new FileInputStream(file);
-            workbook = new HSSFWorkbook(fis);
+            workbook = WorkbookFactory.create(fis);
         } else {
             workbook = new HSSFWorkbook();
         }
         // 根据当前工作表数量创建相应编号的工作表
         String sheetName = DateUtil.format(new Date(), "yyyyMMddHHmmssSS");
-        HSSFSheet sheet = workbook.createSheet(sheetName);
-        HSSFRow headRow = sheet.createRow(0);
+        Sheet sheet = workbook.createSheet(sheetName);
+        Row headRow = sheet.createRow(0);
         // 添加表格标题
         for (int i = 0; i < titles.length; i++) {
-            HSSFCell cell = headRow.createCell(i);
+            Cell cell = headRow.createCell(i);
             cell.setCellType(HSSFCell.CELL_TYPE_STRING);
             cell.setCellValue(titles[i]);
             // 设置字体加粗
-            HSSFCellStyle cellStyle = workbook.createCellStyle();
-            HSSFFont font = workbook.createFont();
+            CellStyle cellStyle = workbook.createCellStyle();
+            Font font = workbook.createFont();
             font.setBoldweight(Font.COLOR_NORMAL);
             cellStyle.setFont(font);
             // 设置自动换行
@@ -161,7 +162,7 @@ public class HssfExcelHelper extends ExcelHelper {
         }
         // 添加表格内容
         for (int i = 0; i < dataModels.size(); i++) {
-            HSSFRow row = sheet.createRow(i + 1);
+            Row row = sheet.createRow(i + 1);
             // 遍历属性列表
             for (int j = 0; j < fieldNames.length; j++) {
                 // 通过反射获取属性的值域
@@ -171,7 +172,7 @@ public class HssfExcelHelper extends ExcelHelper {
                 }
                 Object result = ReflectUtil.invokeGetter(dataModels.get(i),
                         fieldName);
-                HSSFCell cell = row.createCell(j);
+                Cell cell = row.createCell(j);
                 cell.setCellValue(StringUtil.toString(result));
                 // 如果是日期类型则进行格式化处理
                 if (isDateType(clazz, fieldName)) {
