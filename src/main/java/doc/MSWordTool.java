@@ -24,9 +24,9 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 import org.w3c.dom.Node;
 
 /**
- * 使用POI,进行Word相关的操作
- *
- *
+ * @Auther: xujunqian
+ * @Date: 2019/9/9 0009 11:08
+ * @Description:
  */
 public class MSWordTool {
 
