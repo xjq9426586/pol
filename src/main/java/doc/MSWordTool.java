@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.poi.POIXMLDocument;
-import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -19,7 +18,6 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.apache.xmlbeans.XmlOptions;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 import org.w3c.dom.Node;
 
@@ -88,7 +86,7 @@ public class MSWordTool {
         BookMark bookMark = bookMarks.getBookmark(bookMarkName);
         Map<String, String> columnMap = new HashMap<String, String>();
         Map<String, Node> styleNode = new HashMap<String, Node>();
-
+        Map<String, CTTcPr> tcPrMap = new HashMap<>();//保存单元格样式
         //标签是否处于表格内
         if(bookMark.isInTable()){
 
@@ -98,16 +96,18 @@ public class MSWordTool {
             CTRow ctRow = row.getCtRow();
             List<XWPFTableCell> rowCell = row.getTableCells();
             for(int i = 0; i < rowCell.size(); i++){
+                //获取单元格标签
                 columnMap.put(i+"", rowCell.get(i).getText().trim());
                 //System.out.println(rowCell.get(i).getParagraphs().get(0).createRun().getFontSize());
                 //System.out.println(rowCell.get(i).getParagraphs().get(0).getCTP());
                 //System.out.println(rowCell.get(i).getParagraphs().get(0).getStyle());
-
+                CTTcPr tcPr = rowCell.get(i).getCTTc().getTcPr();
+                tcPrMap.put(String.valueOf(i), tcPr);
                 //获取该单元格段落的xml，得到根节点
                 Node node1 = rowCell.get(i).getParagraphs().get(0).getCTP().getDomNode();
-
                 //遍历根节点的所有子节点
                 for (int x=0;x<node1.getChildNodes().getLength();x++) {
+                    //System.out.println(node1.getChildNodes().item(x).getNodeName());
                     if (node1.getChildNodes().item(x).getNodeName().equals(BookMark.RUN_NODE_NAME)) {
                         Node node2 = node1.getChildNodes().item(x);
 
@@ -132,15 +132,12 @@ public class MSWordTool {
                     break;
                 }
             }
-            table.removeRow(rowNum);
+            //table.removeRow(rowNum);
 
-            for(int i = 0; i < content.size(); i++){
+            for(int i = 0; i < content.size()-1; i++){
                 //创建新的一行,单元格数是表的第一行的单元格数,
                 //后面添加数据时，要判断单元格数是否一致
                 XWPFTableRow tableRow = table.createRow();
-                CTTrPr trPr = tableRow.getCtRow().addNewTrPr();
-                CTHeight ht = trPr.addNewTrHeight();
-                ht.setVal(BigInteger.valueOf(360));
             }
 
             //得到表格行数
@@ -166,6 +163,8 @@ public class MSWordTool {
                 for(int j = 0; j < cells.size(); j++){
                     XWPFParagraph para = cells.get(j).getParagraphs().get(0);
                     XWPFRun run = para.createRun();
+                    CTTc pa = cells.get(j).getCTTc();
+                    pa.setTcPr(tcPrMap.get(String.valueOf(j)));//重新设置单元格样式
                     if(content.get(i-rowNum).get(columnMap.get(j+"")) != null){
 
                         //改变单元格的值，标题栏不用改变单元格的值

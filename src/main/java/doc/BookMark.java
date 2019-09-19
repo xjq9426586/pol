@@ -118,25 +118,19 @@ public class BookMark {
      */
     public void insertTextAtBookMark(String bookmarkValue, int where) {
 
-        //根据标签的类型，进行不同的操作
-        if(this._isCell) {
-            this.handleBookmarkedCells(bookmarkValue, where);
-        } else {
-
-            //普通标签，直接创建一个元素
-            XWPFRun run = this._para.createRun();
-            run.setText(bookmarkValue);
-            switch(where) {
-                case BookMark.INSERT_AFTER:
-                    this.insertAfterBookmark(run);
-                    break;
-                case BookMark.INSERT_BEFORE:
-                    this.insertBeforeBookmark(run);
-                    break;
-                case BookMark.REPLACE:
-                    this.replaceBookmark(run);
-                    break;
-            }
+        //普通标签，直接创建一个元素
+        XWPFRun run = this._para.createRun();
+        run.setText(bookmarkValue);
+        switch(where) {
+            case BookMark.INSERT_AFTER:
+                this.insertAfterBookmark(run);
+                break;
+            case BookMark.INSERT_BEFORE:
+                this.insertBeforeBookmark(run);
+                break;
+            case BookMark.REPLACE:
+                this.replaceBookmark(run);
+                break;
         }
     }
 

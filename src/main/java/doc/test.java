@@ -15,11 +15,36 @@ public class test {
      * @param args
      */
     public static void main(String[] args) {
+        fill2();
         //fill();
-        List<String> paths = mergeDoc();
-        MergeDoc.mergeDocs(paths, "D:\\merge.docx");
+//        List<String> paths = mergeDoc();
+//        MergeDoc.mergeDocs(paths, "D:\\merge.docx");
 
     }
+    public static void fill2(){
+        MSWordTool changer = new MSWordTool();
+        changer.setTemplate("D:\\secondTemplate.docx");
+        Map<String,String> content = new HashMap<String,String>();
+        content.put("a", "格式规范、标准统一、利于阅览");
+        content.put("b", "规范会议操作、提高会议质量");
+        content.put("c", "公司会议、部门之间业务协调会议");
+
+        content.put("d", "**有限公司");
+        content.put("e", "机场路2号");
+        content.put("f", "3021170207");
+        List<Map<String ,String>> content2 = new ArrayList<Map<String, String>>();
+
+        for(int i = 0; i < 3; i++){
+            content2.add(content);
+        }
+        List<CellRange> crs = new ArrayList<>();
+        CellRange cr = new CellRange(0, 0 , 3, content2.size() + 3, 1);
+        crs.add(cr);
+        changer.fillTableAtBookMark("list", content2, crs);
+        changer.saveAs();
+
+    }
+
     public static void fill(){
         long startTime = System.currentTimeMillis();
         MSWordTool changer = new MSWordTool();
@@ -40,6 +65,7 @@ public class test {
 
         content.put("company_name", "**有限公司");
         content.put("company_address", "机场路2号");
+        content.put("name", "替换？");
         changer.replaceBookMark(content);
 
 
