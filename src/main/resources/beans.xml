@@ -14,35 +14,36 @@
 	<!-- 打开Spring的Annotation支持 -->
 	<context:annotation-config />
 	<!-- 设定Spring 去哪些包中找Annotation -->
-	<context:component-scan base-package="log" />
+	<context:component-scan base-package="jdbc" />
    	<!-- 导入Src目录下的jdbc.properties文件 -->
-	<!-- <context:property-placeholder location="classpath:/jdbc.properties" />
+	 <context:property-placeholder location="classpath:/jdbc.properties" />
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="${jdbc.driverClassName}" />
 		<property name="url" value="${jdbc.url}" />
 		<property name="username" value="${jdbc.username}" />
 		<property name="password" value="${jdbc.password}" />
-		配置连接池的初始值
+		<!--配置连接池的初始值-->
 		<property name="initialSize" value="1" />
-		连接池的最大值
+		<!--连接池的最大值-->
 		<property name="maxActive" value="500"/>
-		最大空闲时，当经过一个高峰之后，连接池可以将一些用不到的连接释放，一直减少到maxIdle为止
+		<!--最大空闲时，当经过一个高峰之后，连接池可以将一些用不到的连接释放，一直减少到maxIdle为止-->
 		<property name="maxIdle" value="2"/>
-		当最小空闲时，当连接少于minIdle时会自动去申请一些连接
+		<!--当最小空闲时，当连接少于minIdle时会自动去申请一些连接-->
 		<property name="minIdle" value="1" />
-		<property name="maxActive" value="100" />
-		<property name="maxIdle" value="20" />
 		<property name="maxWait" value="1000" />
 	</bean>
-	创建Spring的SessionFactory工厂
-	如果使用的是Annotation的方式，不能使用LocalSessionFactoryBean,而应该使用 org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean
-	<bean id="sessionFactory"
-		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+	<!--创建Spring的SessionFactory工厂-->
+	<!--如果使用的是Annotation的方式，不能使用LocalSessionFactoryBean,而应该使用 org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean-->
+	<!--<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
 		
-		注入数据源
+		&lt;!&ndash;注入数据源&ndash;&gt;
 		<property name="dataSource" ref="dataSource" />
-		设置Spring取那个包中查找相应的实体类
+		&lt;!&ndash;设置Spring取那个包中查找相应的实体类&ndash;&gt;
 		<property name="packagesToScan">
 			<value>org.xjq.cms.model</value>
 
@@ -59,30 +60,30 @@
 		</property>
 	</bean>
 
-	配置Spring的事务处理
-	创建事务管理器
+	&lt;!&ndash;配置Spring的事务处理&ndash;&gt;
+	&lt;!&ndash;创建事务管理器&ndash;&gt;
 	<bean id="txManager"
 		  class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory" />
-	</bean>
+	</bean>-->
 	
-定义事物通知， 配置哪些方法要加入事务控制
-	<tx:advice id="txAdvice" transaction-manager="txManager">
+<!--定义事物通知， 配置哪些方法要加入事务控制-->
+	<!--<tx:advice id="txAdvice" transaction-manager="txManager">
 		<tx:attributes>
-		让所有的方法都加入事务管理
+		&lt;!&ndash;让所有的方法都加入事务管理&ndash;&gt;
 			<tx:method name="*" propagation="REQUIRED"/>
 		</tx:attributes>
-	</tx:advice>
-注解方式事物管理
-	<tx:annotation-driven transaction-manager="txManager" />
-配置AOP，Spring通过AOP来进行事务管理
-	<aop:config>
-	定义一个切点，哪些方法要加入事务处理
+	</tx:advice>-->
+<!--注解方式事物管理-->
+	<!--<tx:annotation-driven transaction-manager="txManager" />-->
+<!--配置AOP，Spring通过AOP来进行事务管理-->
+	<!--<aop:config>
+	    &lt;!&ndash;定义一个切点，哪些方法要加入事务处理&ndash;&gt;
 		<aop:pointcut id="allMethods"
 			expression="execution(* org.xjq.cms.dao.*.*(..))" />
-		通过advisor对切点和事物通知进行适配
+		&lt;!&ndash;通过advisor对切点和事物通知进行适配&ndash;&gt;
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="allMethods" />
-	</aop:config> -->
+	</aop:config>-->
 
 <!-- 配置日志 使用Aop 记录日志注意:
         1). 此处proxy-target-class="true" 否则Service内的参数会被拦截掉,导致Service内无法获得前台传递的参数

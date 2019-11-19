@@ -77,6 +77,7 @@ public class LightTest {
             System.out.println("当前灯ordinal：" + aLight.ordinal());
 
             System.out.println("当前灯：" + aLight);
+            System.out.println("当前灯4353564：" + aLight.nCode);
 
         }
 

@@ -210,7 +210,7 @@ public abstract class ExcelHelper {
             }*/
             File file2 = new File("C:\\Users\\Administrator\\Desktop\\excel.xls");
             ExcelHelper eh2 = HssfExcelHelper.getInstance(file2);
-            eh2.writeExcel(Employee.class, employees);
+            //eh2.writeExcel(Employee.class, employees);
             eh2.writeExcel(Employee.class, employees, fieldNames, titles);
             List<Employee> list2 = eh2.readExcel(Employee.class, fieldNames,
                     true);

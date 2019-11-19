@@ -637,7 +637,7 @@ public class BookMark {
      * for example. Calling the getNodeValue() method on a text node will return
      * the text the node encapsulates but doing the same on an element node will
      * not. In fact, the call will simply return a null value. As a result, this
-     * method will test the nodes name to catch all text nodes - those whose
+     * method will MapFilter the nodes name to catch all text nodes - those whose
      * name is to 'w:t' and then it's type. If the type is reported to be a text
      * node, it is a trivial task to get at it's contents. However, if the type
      * is not reported as a text type, then it is necessary to parse the raw XML

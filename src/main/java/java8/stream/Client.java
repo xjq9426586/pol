@@ -2,6 +2,7 @@ package java8.stream;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 public class Client {
 
     public static List<Dish> menu = Arrays.asList(
+            new Dish("pork", false, 1000, Dish.Type.MEAT),
             new Dish("pork", false, 800, Dish.Type.MEAT),
             new Dish("beaf", false, 700, Dish.Type.MEAT),
             new Dish("chicken", false, 400, Dish.Type.MEAT),
@@ -31,8 +33,13 @@ public class Client {
                 .collect(Collectors.toList());              // 终端转换为列表
         return dishNames;
     }
-
+    public static void countByList(List<Dish> list){
+        Map<String, List<Dish>> map = list.stream().collect(Collectors.groupingBy(Dish::getName));
+        System.out.println(map);
+        map.forEach((k,v) -> System.out.println("key=" + k + ",value=" + v));
+    }
     public static void main(String[] args){
+        countByList(menu);
         filterDishName().forEach(System.out::println);
 
         String[] arrays = {"hello", "world"};

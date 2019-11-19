@@ -21,7 +21,7 @@ import java.util.List;
 public class MergeDoc {
     public static void main (String[] args) throws Exception {
         List<String> paths = new ArrayList<>();
-        paths.add("D:\\test.docx");
+        paths.add("D:\\MapFilter.docx");
         paths.add("D:\\test1.docx");
         paths.add("D:\\test2.docx");
         mergeDocs(paths, "D:\\dest.docx");

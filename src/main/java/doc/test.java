@@ -114,7 +114,7 @@ public class test {
 
         List<String> paths = new ArrayList<>();
         MSWordTool changer = new MSWordTool();
-        changer.setTemplate("D:\\test.docx");
+        changer.setTemplate("D:\\MapFilter.docx");
         Map<String,String> content = new HashMap<String,String>();
         content.put("Principles", "格式规范、标准统一、利于阅览");
         content.put("Purpose", "规范会议操作、提高会议质量");

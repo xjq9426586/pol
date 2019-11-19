@@ -19,15 +19,15 @@ public class Test{
 //
 //            Thread.sleep(5000); 
 //            System.out.println("【增加job1启动】开始(每1秒输出一次)...");  
-//            quartzManager.addJob("test", "test", "test", "test", MyJob.class, "0/1 * * * * ?");    
+//            quartzManager.addJob("MapFilter", "MapFilter", "MapFilter", "MapFilter", MyJob.class, "0/1 * * * * ?");
 //
 //            Thread.sleep(5000);    
 //            System.out.println("【修改job1时间】开始(每2秒输出一次)...");    
-//            quartzManager.modifyJobTime("test", "test", "test", "test", "0/3 * * * * ?");    
+//            quartzManager.modifyJobTime("MapFilter", "MapFilter", "MapFilter", "MapFilter", "0/3 * * * * ?");
 //
 //            Thread.sleep(10000);    
 //            System.out.println("【移除job1定时】开始...");    
-//            quartzManager.removeJob("test", "test", "test", "test");    
+//            quartzManager.removeJob("MapFilter", "MapFilter", "MapFilter", "MapFilter");
         	String time="09:25,16:23";
         	String days="1,2,3,4,5";
         	String t[]=time.split(",");
@@ -74,11 +74,11 @@ public class Test{
 			quartzManager.addJob("test1", "test", "test1", "test", MyJob1.class, "0 59 15 * * ?");
 			
 			
-			/*quartzManager.modifyJobTime("test", "test", "test", "test", "0 11 16 * * ?");
+			/*quartzManager.modifyJobTime("MapFilter", "MapFilter", "MapFilter", "MapFilter", "0 11 16 * * ?");
 			
 			
 			
-			quartzManager.modifyJobTime("test1", "test", "test1", "test", "0 13 16 * * ?");*/
+			quartzManager.modifyJobTime("test1", "MapFilter", "test1", "MapFilter", "0 13 16 * * ?");*/
             // 关掉任务调度容器
             // quartzManager.shutdownJobs();
         } catch (Exception e) {  

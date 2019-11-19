@@ -124,7 +124,7 @@ public class BookMarks {
             List<CTBookmark> bookmarkList = paragraph.getCTP().getBookmarkStartList();
 
             for (CTBookmark bookmark : bookmarkList ) {
-                // With a bookmark in hand, test to see if the bookmarkStart tag
+                // With a bookmark in hand, MapFilter to see if the bookmarkStart tag
                 // has w:colFirst or w:colLast attributes. If it does, we are
                 // dealing with a bookmarked table cell. This will need to be
                 // handled differnetly - I think by an different concrete class

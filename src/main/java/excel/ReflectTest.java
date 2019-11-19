@@ -13,7 +13,7 @@ import java.util.Date;
 public class ReflectTest {
 
     public static void main(String[] args)
-            throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+            throws Exception{
 
         Student student = new Student();
 
@@ -27,6 +27,10 @@ public class ReflectTest {
         @SuppressWarnings("rawtypes")
         Class studentClass = (Class) student.getClass(); // studentClass
 
+        String methodName = "set" + StringUtil.firstCharUpperCase("name");
+        Field f1 = studentClass.getDeclaredField("name");
+        Method method1 = studentClass.getMethod(methodName, f1.getType());
+        method1.invoke(student, "hhhhhhh");
         /*
          * 得到类中的所有属性集合
          */
