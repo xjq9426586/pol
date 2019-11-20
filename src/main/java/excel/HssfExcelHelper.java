@@ -152,7 +152,6 @@ public class HssfExcelHelper extends ExcelHelper {
             // 设置字体加粗
             CellStyle cellStyle = workbook.createCellStyle();
             Font font = workbook.createFont();
-            font.setBoldweight(Font.COLOR_NORMAL);
             cellStyle.setFont(font);
             // 设置自动换行
             cellStyle.setWrapText(true);
