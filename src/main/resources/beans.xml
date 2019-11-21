@@ -9,12 +9,12 @@
          http://www.springframework.org/schema/context/spring-context-3.0.xsd
          http://www.springframework.org/schema/aop
          http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
-         http://www.springframework.org/schema/tx 
+         http://www.springframework.org/schema/tx
          http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 	<!-- 打开Spring的Annotation支持 -->
 	<context:annotation-config />
 	<!-- 设定Spring 去哪些包中找Annotation -->
-	<context:component-scan base-package="jdbc" />
+	<context:component-scan base-package="rabbitmq" />
    	<!-- 导入Src目录下的jdbc.properties文件 -->
 	 <context:property-placeholder location="classpath:/jdbc.properties" />
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
@@ -40,7 +40,7 @@
 	<!--如果使用的是Annotation的方式，不能使用LocalSessionFactoryBean,而应该使用 org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean-->
 	<!--<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
-		
+
 		&lt;!&ndash;注入数据源&ndash;&gt;
 		<property name="dataSource" ref="dataSource" />
 		&lt;!&ndash;设置Spring取那个包中查找相应的实体类&ndash;&gt;
@@ -55,7 +55,7 @@
 				<prop key="hibernate.show_sql">false</prop>
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
 				<prop key="hibernate.format_sql">false</prop>
-				
+
 			</props>
 		</property>
 	</bean>
@@ -66,7 +66,7 @@
 		  class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory" />
 	</bean>-->
-	
+
 <!--定义事物通知， 配置哪些方法要加入事务控制-->
 	<!--<tx:advice id="txAdvice" transaction-manager="txManager">
 		<tx:attributes>
@@ -97,10 +97,11 @@
        method="doAfterThrowing" throwing="e"/>
         <aop:around pointcut-ref="teslaLogAOP" method="doAround"/>
         </aop:aspect>
-        
+
     </aop:config>
 
       <!-- Aop日志类 -->
         <bean id="teslaLog" class="log.CommonLogger"/>
          <bean id="a" class="log.a"/>
+	<import resource="applicationContext-rabbitmq.xml"></import>
 </beans>

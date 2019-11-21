@@ -1,6 +1,10 @@
 package test;
 
+import com.jeedev.msdp.utlis.DateUtil;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class test3 {
 	public static void main(String[] args) throws Exception {
@@ -11,10 +15,7 @@ public class test3 {
 ////			sb.append(temp[i]);
 ////		}
 //		System.out.println(sb.reverse());
-
-		String str = "2018";
-		String strs = "2019-2018";
-		System.out.println(StringUtils.replace(strs, str, "p"));
-		System.out.println(strs.replace(str,""));
+		String date = "2018-11";
+		System.out.println(DateUtil.addYear(date,-1));
 	}
 }
