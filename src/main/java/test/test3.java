@@ -1,10 +1,6 @@
 package test;
 
-import com.jeedev.msdp.utlis.DateUtil;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 public class test3 {
 	public static void main(String[] args) throws Exception {
@@ -16,6 +12,6 @@ public class test3 {
 ////		}
 //		System.out.println(sb.reverse());
 		String date = "2018-11";
-		System.out.println(DateUtil.addYear(date,-1));
+		System.out.println(Arrays.asList(date.split(",")));
 	}
 }

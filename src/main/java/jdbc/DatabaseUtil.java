@@ -72,7 +72,10 @@ public class DatabaseUtil {
         try {
             //获取数据库的元数据
             DatabaseMetaData db = conn.getMetaData();
-            //从元数据中获取到所有的表名
+            String url = db.getURL();
+            String table_schema = url.substring(url.lastIndexOf("/") + 1, url.indexOf("?"));
+            System.out.println(table_schema);
+                    //从元数据中获取到所有的表名
             rs = db.getTables(null, null, null, new String[] { "TABLE" });
             while(rs.next()) {
                 tableNames.add(rs.getString(3));
@@ -131,11 +134,12 @@ public class DatabaseUtil {
         //获取IoC容器中JdbcTemplate实例
         JdbcTemplate jdbcTemplate = (JdbcTemplate) ctx.getBean("jdbcTemplate");
         String sql="show full columns from base_ddct";
+        String tableCommentsql = "SELECT TABLE_COMMENT FROM information_schema.TABLES WHERE table_schema='heshun' and table_name='cust_list'";
         List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
-        System.out.println(list);
+        System.out.println(jdbcTemplate.queryForMap(tableCommentsql));
     }
     public static void main(String[] args) {
-        test();
+       test();
 //        List<String> tableNames = getTableNames();
 //        System.out.println("tableNames:" + tableNames);
 //        for (String tableName : tableNames) {

@@ -18,9 +18,9 @@ public class JxlsDemo {
         List<Employee> employees = generateSampleEmployeeData();
         OutputStream os = new FileOutputStream("target/object_collection_output.xls");
         Map<String , Object> model=new HashMap<String , Object>();
-        model.put("employees", employees);
+        model.put("employees", generateData());
         model.put("nowdate", new Date());
-        InputStream inputStream = new FileInputStream(filePath + "template.xls");
+        InputStream inputStream = new FileInputStream("C:\\Users\\Administrator\\Desktop\\123.xls");
         JxlsUtils.exportExcel(inputStream, os, model);
         os.close();
     }
@@ -33,6 +33,16 @@ public class JxlsDemo {
         employees.add( new Employee("Neil", dateFormat.parse("1975-Oct-05"), 2500, 0.00) );
         employees.add( new Employee("Maria", dateFormat.parse("1978-Jan-07"), 1700, 0.15) );
         employees.add( new Employee("John", dateFormat.parse("1969-May-30"), 2800, 0.20) );
+        return employees;
+    }
+    public static List<Map<String, Object>> generateData() throws ParseException {
+        List<Map<String, Object>> employees = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "123");
+        map.put("birthDate", "123");
+        map.put("payment", "123");
+        map.put("bonus", "123");
+        employees.add(map);
         return employees;
     }
 }
