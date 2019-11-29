@@ -13,6 +13,14 @@ import java.util.*;
  * @Description:
  */
 public class XmlUtil {
+    public static Map<String, Object> xmlStrToMap(String xmlStr) {
+        try {
+            return xmlToMap(xmlStr.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public static Map<String, Object> xmlToMap(byte[] fileData) {
         return xmlToMap(new ByteArrayInputStream(fileData));
     }

@@ -1,17 +1,30 @@
 package comparator;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class GroupTest {
     class Apple {
     public String color;
     public Integer weight;
 
-    public Apple(String color, int weight) {
+        public String getColor() {
+            return color;
+        }
+
+        public void setColor(String color) {
+            this.color = color;
+        }
+
+        public Integer getWeight() {
+            return weight;
+        }
+
+        public void setWeight(Integer weight) {
+            this.weight = weight;
+        }
+
+        public Apple(String color, int weight) {
         super();
         this.color = color;
         this.weight = weight;
@@ -48,45 +61,52 @@ public class GroupTest {
         return result;
     }
     public static void main(String[] args) {
-    List<Apple> list = new ArrayList<>();
-    list.add(new GroupTest().new Apple("红", 205));
-    list.add(new GroupTest().new Apple("红", 131));
-    list.add(new GroupTest().new Apple("绿", 248));
-    list.add(new GroupTest().new Apple("绿", 153));
-    list.add(new GroupTest().new Apple("黄", 119));
-    list.add(new GroupTest().new Apple("黄", 224));
-    List<List<Apple>> byColors = divider(list, new Comparator<Apple>() {
+        List<Apple> list = new ArrayList<>();
 
-        @Override
-        public int compare(Apple o1, Apple o2) {
-        // 按颜色分组
-        return o1.color.compareTo(o2.color);
-        }
-    });
-    System.out.println("按颜色分组" + byColors);
-    List<List<Apple>> byWeight = divider(list, new Comparator<Apple>() {
+        list.add(new GroupTest().new Apple("红", 205));
+        list.add(new GroupTest().new Apple("红", 131));
+        list.add(new GroupTest().new Apple("绿", 248));
+        list.add(new GroupTest().new Apple("绿", 153));
+        list.add(new GroupTest().new Apple("黄", 119));
+        list.add(new GroupTest().new Apple("黄", 224));
+        Map<String,List<Apple>> groupByMap = list.stream().collect(Collectors.groupingBy(Apple::getColor));
+        groupByMap.forEach((k,v) -> System.out.println(k+"," + v));
+        list.sort(Comparator.comparing(Apple::getWeight));
+        System.out.println(list);
+        List<List<Apple>> byColors = divider(list, new Comparator<Apple>() {
 
-        @Override
-        public int compare(Apple o1, Apple o2) {
-        // 按重量级
+            @Override
+            public int compare(Apple o1, Apple o2) {
+                // 按颜色分组
+                return o1.color.compareTo(o2.color);
+            }
+        });
+        System.out.println("按颜色分组" + byColors);
+        List<List<Apple>> byWeight = divider(list, new Comparator<Apple>() {
 
-        return (o1.weight / 100 == o2.weight / 100) ? 0 : 1;
-        }
-    });
-    System.out.println("按重量级分组" + byWeight);
-    
-    
-    
-    
-    Collections.sort(list, new Comparator<Apple>(){
+            @Override
+            public int compare(Apple o1, Apple o2) {
+                // 按重量级
 
-		@Override
-		public int compare(Apple o1, Apple o2) {
-			
-			return o1.weight.compareTo(o2.weight);
-		}
-    	
-    });
-    System.out.println("按重量级比较"+list);
+                return (o1.weight / 100 == o2.weight / 100) ? 0 : 1;
+            }
+        });
+        System.out.println("按重量级分组" + byWeight);
+
+
+
+
+        Collections.sort(list, new Comparator<Apple>(){
+
+            @Override
+            public int compare(Apple o1, Apple o2) {
+
+                return o1.weight.compareTo(o2.weight);
+            }
+
+        });
+        System.out.println("按重量级比较"+list);
+
     }
+
 }

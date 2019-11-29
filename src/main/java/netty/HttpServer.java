@@ -19,9 +19,6 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 
-/**
- * Created by RoyDeng on 17/7/20.
- */
 public class HttpServer {
 
     private final int port;
