@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
          http://www.springframework.org/schema/context
          http://www.springframework.org/schema/context/spring-context-3.0.xsd
@@ -15,10 +15,10 @@
 	<context:annotation-config />
 	<!-- 设定Spring 去哪些包中找Annotation -->
 	<context:component-scan base-package="rabbitmq" />
-   	<!-- 导入Src目录下的jdbc.properties文件 -->
-	 <context:property-placeholder location="classpath:/jdbc.properties" />
+	<!-- 导入Src目录下的jdbc.properties文件 -->
+	<context:property-placeholder location="classpath:/jdbc.properties" />
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
-		destroy-method="close">
+		  destroy-method="close">
 		<property name="driverClassName" value="${jdbc.driverClassName}" />
 		<property name="url" value="${jdbc.url}" />
 		<property name="username" value="${jdbc.username}" />
@@ -33,75 +33,28 @@
 		<property name="minIdle" value="1" />
 		<property name="maxWait" value="1000" />
 	</bean>
-    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name="dataSource" ref="dataSource"></property>
-    </bean>
-	<!--创建Spring的SessionFactory工厂-->
-	<!--如果使用的是Annotation的方式，不能使用LocalSessionFactoryBean,而应该使用 org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean-->
-	<!--<bean id="sessionFactory"
-		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
-
-		&lt;!&ndash;注入数据源&ndash;&gt;
-		<property name="dataSource" ref="dataSource" />
-		&lt;!&ndash;设置Spring取那个包中查找相应的实体类&ndash;&gt;
-		<property name="packagesToScan">
-			<value>org.xjq.cms.model</value>
-
-		</property>
-		<property name="hibernateProperties">
-			<value> hibernate.dialect=org.hibernate.dialect.HSQLDialect </value>
-			<props>
-				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
-				<prop key="hibernate.show_sql">false</prop>
-				<prop key="hibernate.hbm2ddl.auto">update</prop>
-				<prop key="hibernate.format_sql">false</prop>
-
-			</props>
-		</property>
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 
-	&lt;!&ndash;配置Spring的事务处理&ndash;&gt;
-	&lt;!&ndash;创建事务管理器&ndash;&gt;
-	<bean id="txManager"
-		  class="org.springframework.orm.hibernate4.HibernateTransactionManager">
-        <property name="sessionFactory" ref="sessionFactory" />
-	</bean>-->
+	<!-- 配置日志 使用Aop 记录日志注意:
+            1). 此处proxy-target-class="true" 否则Service内的参数会被拦截掉,导致Service内无法获得前台传递的参数
+            2). Service需交给spring容器去管理 -->
+	<aop:config expose-proxy="true" proxy-target-class="true">
+		<aop:aspect id="teslaLogAspect" ref="teslaLog">
+			<!-- 对哪些方法进行日志记录, 此处屏蔽action内的set get方法 -->
+			<aop:pointcut id="teslaLogAOP"
+						  expression="execution(* log.*.*(..))"/>
+			<aop:after-throwing pointcut-ref="teslaLogAOP"
+								method="doAfterThrowing" throwing="e"/>
+			<aop:around pointcut-ref="teslaLogAOP" method="doAround"/>
+		</aop:aspect>
 
-<!--定义事物通知， 配置哪些方法要加入事务控制-->
-	<!--<tx:advice id="txAdvice" transaction-manager="txManager">
-		<tx:attributes>
-		&lt;!&ndash;让所有的方法都加入事务管理&ndash;&gt;
-			<tx:method name="*" propagation="REQUIRED"/>
-		</tx:attributes>
-	</tx:advice>-->
-<!--注解方式事物管理-->
-	<!--<tx:annotation-driven transaction-manager="txManager" />-->
-<!--配置AOP，Spring通过AOP来进行事务管理-->
-	<!--<aop:config>
-	    &lt;!&ndash;定义一个切点，哪些方法要加入事务处理&ndash;&gt;
-		<aop:pointcut id="allMethods"
-			expression="execution(* org.xjq.cms.dao.*.*(..))" />
-		&lt;!&ndash;通过advisor对切点和事物通知进行适配&ndash;&gt;
-		<aop:advisor advice-ref="txAdvice" pointcut-ref="allMethods" />
-	</aop:config>-->
+	</aop:config>
 
-<!-- 配置日志 使用Aop 记录日志注意:
-        1). 此处proxy-target-class="true" 否则Service内的参数会被拦截掉,导致Service内无法获得前台传递的参数
-        2). Service需交给spring容器去管理 -->
-    <aop:config expose-proxy="true" proxy-target-class="true">
-       <aop:aspect id="teslaLogAspect" ref="teslaLog">
-       <!-- 对哪些方法进行日志记录, 此处屏蔽action内的set get方法 -->
-       <aop:pointcut id="teslaLogAOP"
-       expression="execution(* log.*.*(..))"/>
-       <aop:after-throwing pointcut-ref="teslaLogAOP"
-       method="doAfterThrowing" throwing="e"/>
-        <aop:around pointcut-ref="teslaLogAOP" method="doAround"/>
-        </aop:aspect>
+	<!-- Aop日志类 -->
+	<bean id="teslaLog" class="log.CommonLogger"/>
+	<bean id="a" class="log.a"/>
 
-    </aop:config>
-
-      <!-- Aop日志类 -->
-        <bean id="teslaLog" class="log.CommonLogger"/>
-         <bean id="a" class="log.a"/>
 	<import resource="applicationContext-rabbitmq.xml"></import>
 </beans>

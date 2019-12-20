@@ -16,7 +16,7 @@ public class CollectionsDemo {
 	       System.out.println(diff);
 	       Sets.SetView<Integer> union=Sets.union(set1,set2); //并集
 	       System.out.println(union);
-	       
+
 	       
 	       Iterator<Integer> i=set1.iterator();
 	       String[] subdirs = { "usr", "local", "lib" };

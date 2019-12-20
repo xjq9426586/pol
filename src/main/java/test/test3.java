@@ -11,7 +11,7 @@ public class test3 {
 ////			sb.append(temp[i]);
 ////		}
 //		System.out.println(sb.reverse());
-		String date = "2018-11";
-		System.out.println(Arrays.asList(date.split(",")));
+		String date = "2018|@|11";
+		System.out.println(date.split("\\|@\\|")[0]);
 	}
 }

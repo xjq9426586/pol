@@ -15,10 +15,10 @@ public class test {
      * @param args
      */
     public static void main(String[] args) {
-        fill2();
+        //fill2();
         //fill();
-//        List<String> paths = mergeDoc();
-//        MergeDoc.mergeDocs(paths, "D:\\merge.docx");
+        List<String> paths = mergeDoc2();
+        MergeDoc.mergeDocs(paths, "D:\\merge.docx");
 
     }
     public static void fill2(){
@@ -114,7 +114,7 @@ public class test {
 
         List<String> paths = new ArrayList<>();
         MSWordTool changer = new MSWordTool();
-        changer.setTemplate("D:\\MapFilter.docx");
+        changer.setTemplate("D:\\test.docx");
         Map<String,String> content = new HashMap<String,String>();
         content.put("Principles", "格式规范、标准统一、利于阅览");
         content.put("Purpose", "规范会议操作、提高会议质量");
@@ -150,6 +150,33 @@ public class test {
             paths.add(path1);
         }
 
+        return paths;
+    }
+
+    public static List<String> mergeDoc2(){
+        List<String> paths = new ArrayList<>();
+        MSWordTool changer = new MSWordTool();
+        for (int j = 0; j < 3; j++) {
+
+            changer.setTemplate("D:\\test.docx");
+            Map<String,String> content = new HashMap<String,String>();
+            content.put("Principles", "格式规范、标准统一、利于阅览");
+            content.put("Purpose", "规范会议操作、提高会议质量");
+            content.put("Scope", "公司会议、部门之间业务协调会议");
+
+            content.put("customerName", "**有限公司");
+            content.put("address", "机场路2号");
+            content.put("userNo", "3021170207");
+            content.put("tradeName", "水泥制造");
+            content.put("price1", "1.085");
+            content.put("price2", "0.906");
+            content.put("price3", "0.433");
+            content.put("numPrice", "0.675");
+            changer.replaceBookMark(content);
+            String path = "D:\\p" + j + ".docx";
+            paths.add(path);
+            changer.saveAs(path);
+        }
         return paths;
     }
 }

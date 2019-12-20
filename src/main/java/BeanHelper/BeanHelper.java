@@ -25,7 +25,6 @@ public class BeanHelper {
     /**
      * 使用表单数据构建bean对象（只注入名称匹配的属性）
      * @param request
-     * @param prefix
      * @param c
      * @return
      * @throws IllegalAccessException

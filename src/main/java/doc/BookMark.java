@@ -704,5 +704,8 @@ public class BookMark {
         para = this._tableCell.addParagraph();
         para.createRun().setText(bookmarkValue);
     }
+    public XWPFParagraph getPara(){
+        return this._para;
+    }
 }
 

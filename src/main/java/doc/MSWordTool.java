@@ -2,7 +2,6 @@ package doc;
 
 
 import java.io.*;
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -62,6 +61,9 @@ public class MSWordTool {
 
             //得到标签名称
             BookMark bookMark = bookMarks.getBookmark(bookMarkName);
+            /*XWPFParagraph s = bookMark.getPara();
+            CTBookmark ctBookmark = s.getCTP().getBookmarkStartList().get(0);
+            ctBookmark.setName(bookMarkName + "abc");*/
 
             //进行替换
             if (indicator.get(bookMarkName)!=null) {

@@ -52,7 +52,9 @@ public class HttpServer {
     
 
     public static void main(String[] args) throws Exception {
-        new HttpServer(8080).start();
+        new HttpServer(8081).start();
+        Dispatcher dispatcher = Dispatcher.getDispatcher();
+        dispatcher.init();
     }
 
 }

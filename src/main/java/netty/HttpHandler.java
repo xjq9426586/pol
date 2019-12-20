@@ -18,14 +18,16 @@ import io.netty.handler.codec.http.HttpVersion;
 import io.netty.util.AsciiString;
 import io.netty.util.CharsetUtil;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class HttpHandler extends SimpleChannelInboundHandler<FullHttpRequest> { // 1
 
     private AsciiString contentType = HttpHeaderValues.APPLICATION_JSON;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
-    	
-       
+
+
         httpResponse(ctx, msg, route(msg.uri()));
         
         
@@ -49,7 +51,7 @@ public class HttpHandler extends SimpleChannelInboundHandler<FullHttpRequest> { 
     	 boolean keepAlive = HttpUtil.isKeepAlive(req);
     	DefaultFullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1,
                 HttpResponseStatus.OK,
-                Unpooled.wrappedBuffer(json.toString().getBytes())); // 2
+                Unpooled.wrappedBuffer(json.toJSONString().getBytes())); // 2
 
         HttpHeaders heads = response.headers();
         heads.add(HttpHeaderNames.CONTENT_TYPE, contentType + "; charset=UTF-8");
@@ -61,17 +63,22 @@ public class HttpHandler extends SimpleChannelInboundHandler<FullHttpRequest> { 
             ctx.write(response);
         }
     }
-    private JSONObject route(String uri) {
-    	JSONObject json = new JSONObject();
-    	if("/user".equals(uri)) {
-    	      json.put("user", "123");
-    	}
-    	if("/message".equals(uri)) {
-    		json.put("message", "123");
-    	}
+    private JSONObject route(String uri) throws InvocationTargetException, IllegalAccessException {
+//    	JSONObject json = new JSONObject();
+//    	if("/user".equals(uri)) {
+//    	      json.put("user", "123");
+//    	}
+//    	if("/message".equals(uri)) {
+//    		json.put("message", "123");
+//    	}
+        Dispatcher dispatcher = Dispatcher.getDispatcher();
+        JSONObject json = (JSONObject)dispatcher.dispatcherRoute(uri);
+        if(json == null){
+            json = new JSONObject();
+        }
     	return json;
     }
-    
+
     private JSONObject parseJsonRequest(FullHttpRequest req) {
     	 ByteBuf jsonBuf = req.content();
     	 String jsonStr = jsonBuf.toString(CharsetUtil.UTF_8);

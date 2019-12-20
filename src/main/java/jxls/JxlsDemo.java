@@ -16,11 +16,11 @@ public class JxlsDemo {
 
         String filePath = JxlsDemo.class.getResource("").getPath();
         List<Employee> employees = generateSampleEmployeeData();
-        OutputStream os = new FileOutputStream("target/object_collection_output.xls");
+        OutputStream os = new FileOutputStream("target/object_collection_output.xlsx");
         Map<String , Object> model=new HashMap<String , Object>();
-        model.put("employees", generateData());
+        model.put("employees", generateData1());
         model.put("nowdate", new Date());
-        InputStream inputStream = new FileInputStream("C:\\Users\\Administrator\\Desktop\\123.xls");
+        InputStream inputStream = new FileInputStream("C:\\Users\\Administrator\\Desktop\\代码提交申请单模板.xlsx");
         JxlsUtils.exportExcel(inputStream, os, model);
         os.close();
     }
@@ -42,6 +42,18 @@ public class JxlsDemo {
         map.put("birthDate", "123");
         map.put("payment", "123");
         map.put("bonus", "123");
+        employees.add(map);
+        return employees;
+    }
+
+    public static List<Map<String, Object>> generateData1() throws ParseException, FileNotFoundException {
+        List<Map<String, Object>> employees = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
+        map.put("index", "123");
+        map.put("name", "123");
+        map.put("path", "123");
+        map.put("reason", "123");
+        map.put("date", new FileOutputStream(new File("D:\\work0\\credit_190718\\财报导航配置修改.patch")));
         employees.add(map);
         return employees;
     }
