@@ -20,12 +20,14 @@ public class Dispatcher {
         return dispatcher;
     }
     public void init(){
+        System.out.println("Dispatcher-init=======start");
         Method[] methods = testRoute.getClass().getMethods();
         for (Method method : methods) {
             Route route = method.getAnnotation(Route.class);
             if(route == null) continue;
             map.put(route.name(), method);
         }
+        System.out.println("Dispatcher-init=======end");
     }
     public Object dispatcherRoute(String key) throws InvocationTargetException, IllegalAccessException {
         Method method = (Method) map.get(key);

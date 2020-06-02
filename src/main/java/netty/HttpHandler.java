@@ -64,13 +64,6 @@ public class HttpHandler extends SimpleChannelInboundHandler<FullHttpRequest> { 
         }
     }
     private JSONObject route(String uri) throws InvocationTargetException, IllegalAccessException {
-//    	JSONObject json = new JSONObject();
-//    	if("/user".equals(uri)) {
-//    	      json.put("user", "123");
-//    	}
-//    	if("/message".equals(uri)) {
-//    		json.put("message", "123");
-//    	}
         Dispatcher dispatcher = Dispatcher.getDispatcher();
         JSONObject json = (JSONObject)dispatcher.dispatcherRoute(uri);
         if(json == null){
