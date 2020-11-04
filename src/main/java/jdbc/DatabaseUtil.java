@@ -5,6 +5,9 @@ package jdbc;
  * @Date: 2019/11/5 0005 10:51
  * @Description:
  */
+import com.alibaba.fastjson.JSONArray;
+import com.jeedev.msdp.utlis.MapUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -12,9 +15,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DatabaseUtil {
     private final static Logger LOGGER = LoggerFactory.getLogger(DatabaseUtil.class);
@@ -133,10 +134,41 @@ public class DatabaseUtil {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("beans.xml");
         //获取IoC容器中JdbcTemplate实例
         JdbcTemplate jdbcTemplate = (JdbcTemplate) ctx.getBean("jdbcTemplate");
-        String sql="show full columns from base_ddct";
-        String tableCommentsql = "SELECT TABLE_COMMENT FROM information_schema.TABLES WHERE table_schema='heshun' and table_name='cust_list'";
-        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
-        System.out.println(jdbcTemplate.queryForMap(tableCommentsql));
+        List<Map<String, Object>> fieldList = new ArrayList<>();
+        //获取表名和表注释
+        String tableSql = "SELECT distinct A.OBJECT_NAME as \"tableName\",B.comments as \"descr\" FROM USER_OBJECTS A" +
+                ", USER_TAB_COMMENTS B where A.OBJECT_NAME=B.TABLE_NAME";
+        List<Map<String, Object>> tableList = jdbcTemplate.queryForList(tableSql);
+        tableList.forEach(tableInfo -> {
+            Map<String, Object> reMap = new HashMap<>();
+            String tableName = MapUtil.getString(tableInfo, "tableName");
+            String descr = MapUtil.getString(tableInfo, "descr");
+            //获取表字段与注释
+            String sql = "select t.column_name as \"Field\",t.comments as \"Comment\" from user_col_comments t " +
+                    "where t.table_name = '"+ tableName +"'";
+            List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
+            convert(list, reMap);
+            reMap.put("tableName", tableName.toLowerCase());//表名
+            reMap.put("tableComment", descr);//表注释
+            if(tableList.indexOf(tableInfo) > 5){
+                return;
+            }
+            fieldList.add(reMap);
+
+        });
+        System.out.println(JSONArray.toJSONString(fieldList));
+    }
+
+    public static Map<String, Object> convert(List<Map<String, Object>> list, Map<String, Object> reMap) {
+        list.forEach(item -> {
+            String field = MapUtil.getString(item, "Field").toLowerCase();
+            String comment = MapUtil.getString(item, "Comment");
+            StringBuilder sb = new StringBuilder();
+            List<String> arrs = Arrays.asList(field.split("_"));
+            arrs.forEach(str -> sb.append(arrs.indexOf(str) == 0 ? str : StringUtils.capitalize(str)));
+            reMap.put(sb.toString(), comment);
+        });
+        return reMap;
     }
     public static void main(String[] args) {
        test();
