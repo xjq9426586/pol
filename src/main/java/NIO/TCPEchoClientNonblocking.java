@@ -24,7 +24,8 @@ public class TCPEchoClientNonblocking {
             while (!clntChan.finishConnect()){
                 //在等待连接的时间里，可以执行其他任务，以充分发挥非阻塞IO的异步特性
                 //这里为了演示该方法的使用，只是一直打印"."
-                System.out.print(".");  
+                Thread.sleep(2000);
+                System.out.print(".");
             }
         }
         //为了与后面打印的"."区别开来，这里输出换行符

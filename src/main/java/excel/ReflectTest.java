@@ -1,5 +1,6 @@
 package excel;
 
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,11 +27,15 @@ public class ReflectTest {
         // 通过实例得到类
         @SuppressWarnings("rawtypes")
         Class studentClass = (Class) student.getClass(); // studentClass
-
-        String methodName = "set" + StringUtil.firstCharUpperCase("name");
-        Field f1 = studentClass.getDeclaredField("name");
-        Method method1 = studentClass.getMethod(methodName, f1.getType());
-        method1.invoke(student, "hhhhhhh");
+        PropertyDescriptor pd = new PropertyDescriptor("name", studentClass);
+        Method method1 = pd.getWriteMethod();
+        Class type1 = method1.getParameterTypes()[0];
+        String typeName = type1.getName();
+        System.out.println(typeName);
+//        String methodName = "set" + StringUtil.firstCharUpperCase("name");
+//        Field f1 = studentClass.getDeclaredField("name");
+//        Method method1 = studentClass.getMethod(methodName, f1.getType());
+//        method1.invoke(student, "hhhhhhh");
         /*
          * 得到类中的所有属性集合
          */

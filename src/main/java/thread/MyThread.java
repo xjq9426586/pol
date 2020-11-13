@@ -1,6 +1,6 @@
 package thread;
 
-class MyThread extends Thread {
+public class MyThread extends Thread {
     
     private String str;
     
@@ -11,9 +11,7 @@ class MyThread extends Thread {
 
 	@Override
     public void run() {
-		for (int i = 0; i < 100; i++) {
-			System.out.println(str);
-		}
+		System.out.println(str);
 			
     }
 }

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 
 public class StringUtil {
-	
+
 	//该方法将数据转为16进制显示  
 	public static String byteToHexStr(byte[] bArray,int dataLen, boolean format) {  
 		StringBuffer strb = new StringBuffer(bArray.length);  

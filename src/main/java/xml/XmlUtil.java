@@ -3,6 +3,7 @@ package xml;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.dom4j.tree.DefaultAttribute;
 
 import java.io.*;
 import java.util.*;
@@ -114,7 +115,7 @@ public class XmlUtil {
                 o = e.getText();
             }else{
                 Map<String, Object> newMap = new HashMap<>();
-                o = convert(e, newMap).get(key);//递归获取节点信息
+                o = convert1(e, newMap).get(key);//递归获取节点信息
             }
             rList.add(o);
             map.put(key, rList);
@@ -131,6 +132,6 @@ public class XmlUtil {
         return map;
     }
     public static void main(String[] args) {
-        System.out.println(xmlToMap("C:\\Users\\Administrator\\Desktop\\we.xml"));
+        System.out.println(xmlToMap("C:\\Users\\Administrator\\Desktop\\log4j2.xml"));
     }
 }

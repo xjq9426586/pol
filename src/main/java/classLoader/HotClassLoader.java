@@ -9,13 +9,14 @@ public class HotClassLoader extends URLClassLoader {
         super(urls);
     }
  
-    // 打破双亲模式，保证自己的类会被自己的classloader加载
+    // 打破双亲委派模式，保证自己的类会被自己的classloader加载
     @Override
     protected synchronized Class<?> loadClass(String name, boolean resolve)
             throws ClassNotFoundException {
         Class c = findLoadedClass(name);
         if (c == null) {
             try {
+                //直接调用findclass，不再向上查找class
                 c = findClass(name);
             } catch (Exception e) {
             }

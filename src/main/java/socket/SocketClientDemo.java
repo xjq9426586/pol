@@ -15,10 +15,10 @@ public class SocketClientDemo implements Runnable{
     public SocketClientDemo(){  
         try{  
             //127.0.0.1表示本机IP，10000为服务器Socket设置的端口  
-            socket = new Socket("127.0.0.1", 10000);  
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "GB2312"));  
-            writer = new PrintWriter(socket.getOutputStream(), true);  
-            writer.println("working.............");  
+            socket = new Socket("127.0.0.1", 8125);
+            writer = new PrintWriter(socket.getOutputStream(), true);
+            writer.println("34rrddf");
+            reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "GB2312"));
         }catch(IOException e){  
             e.printStackTrace();  
         }  
@@ -35,21 +35,19 @@ public class SocketClientDemo implements Runnable{
             System.out.println("problem");  
         }finally{  
             //最后关闭Socket  
-            try{  
-                if(socket!=null)socket.close();  
-                if(reader!=null)reader.close();  
-                if(writer!=null)writer.close();  
-            }catch(IOException e){  
-                e.printStackTrace();  
-            }  
+            try{
+                if(socket!=null)socket.close();
+                if(reader!=null)reader.close();
+                if(writer!=null)writer.close();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
               
         }  
           
     }  
-    public static void main(String[] args){  
-        new Thread(new SocketClientDemo()).start();  
-          
-          
+    public static void main(String[] args){
+        new Thread(new SocketClientDemo()).start();
     }  
   
 }  

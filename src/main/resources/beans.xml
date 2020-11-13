@@ -56,5 +56,5 @@
 	<bean id="teslaLog" class="log.CommonLogger"/>
 	<bean id="a" class="log.a"/>
 
-	<import resource="applicationContext-rabbitmq.xml"></import>
+	<!--<import resource="applicationContext-rabbitmq.xml"></import>-->
 </beans>

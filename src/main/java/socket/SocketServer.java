@@ -18,7 +18,7 @@ import java.util.Date;
 
 public class SocketServer extends Thread {
 	
-	private static final int SERVER_PORT = 8050; 
+	private static final int SERVER_PORT = 8125;
 	private int count = 0; // 连接客户端数
 	private ServerSocket ss = null; // 服务端socket
 	
@@ -62,8 +62,8 @@ public class SocketServer extends Thread {
 			OutputStream dout = null;
 			 
 			try {
-				dout = new DataOutputStream(client.getOutputStream()); 
-		        
+				dout = new DataOutputStream(client.getOutputStream());
+
 				while (flag) {
 					// 获取当前链接对象的输入流  
 					din = client.getInputStream();
@@ -72,14 +72,10 @@ public class SocketServer extends Thread {
 					System.out.println("=========" + count + "==========");
 					String str = StringUtil.byteToHexStr(head,headLen,false);
 					System.out.println(str);
-					if(str.trim().substring(8, 10).equals("01")){
-						dout.write(StringUtil.hexStrToByteArr("574B000801"));
-					}
-					if(str.substring(8, 10).equals("02")){
-						String date=DateUtil.getSysDateStr();
-						String hexDate=StringUtil.encode(date);
-						dout.write(StringUtil.hexStrToByteArr("574B002002"+hexDate));
-					}
+					String date=DateUtil.getSysDateStr();
+					String hexDate=StringUtil.encode(date);
+					dout.write(StringUtil.hexStrToByteArr(hexDate));
+					//writer.println(dout);
 				}
 			} catch (Exception e) {  
 				e.printStackTrace();
@@ -88,7 +84,7 @@ public class SocketServer extends Thread {
 					if(dout!=null)dout.close();
 					if(client!=null)client.close();
 					if(din!=null)din.close();
-					writer.close();
+					//writer.close();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
