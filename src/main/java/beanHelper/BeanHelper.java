@@ -1,4 +1,4 @@
-package BeanHelper;
+package beanHelper;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.Enumeration;

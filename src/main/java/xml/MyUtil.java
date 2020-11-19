@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
  */
 public class MyUtil {
     //补丁文件包存放路径
-    public static String desPath = String.format("D:\\xjq\\财务指标查询排序%s\\", DateUtil.getSystemDate(DateUtil.NORM_DATE_PATTERN).replace("-", ""));
+    public static String desPath = String.format("D:\\xjq\\电子文档修改%s\\", DateUtil.getSystemDate(DateUtil.NORM_DATE_PATTERN).replace("-", ""));
     //idea patch文件
-    public static String patch = "D:\\work8\\dev_credit2020\\财务指标查询排序.patch";
+    public static String patch = "D:\\work\\dev_credit2020\\dev_credit2020\\电子文档修改.patch";
 
     public static void main(String[] args) {
         try {
@@ -39,7 +39,7 @@ public class MyUtil {
                     desFilePath.mkdirs();
                 }
                 //idea 源代码路径
-                String sourceFileNameStr = "D:\\work8\\dev_credit2020\\" + path;
+                String sourceFileNameStr = "D:\\work\\dev_credit2020\\dev_credit2020\\" + path;
                 String desFileNameStr = desPath + path;
                 copyFile(sourceFileNameStr, desFileNameStr);
             });
