@@ -1,8 +1,10 @@
 package beanHelper;
 
+import annotation.Bean;
 import annotation.Inject;
 import annotation.Scan;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -15,7 +17,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * @Author: xujunqian
@@ -25,9 +27,69 @@ import java.util.Map;
 @Slf4j
 @Scan({"beanHelper"})
 public class BeanFactory {
-    private static Map<String, Object> beansMap = new HashMap<>();
+    private static ThreadLocal<HashMap<String, Object>> beansMap = new ThreadLocal<>();
 
     static {
+        Class<BeanFactory> clz = BeanFactory.class;
+        Scan scan = clz.getAnnotation(Scan.class);
+        if(scan != null){
+            String[] packagePath = scan.value();
+            initBeanFromAnnotation(packagePath);
+        }else{
+            initBeanFromXml();
+        }
+    }
+
+    /**
+     * 通过注解方式初始化bean，扫描packagePath下所有加上@Bean注解的类
+     * @param packagePath
+     */
+    public static void initBeanFromAnnotation(String[] packagePath){
+        if(beansMap.get() == null){
+            beansMap.set(new HashMap<>());
+        }
+        for (String path : packagePath) {
+            Set<Class<?>> classes = ClassHelper.getClzFromPkg(path);
+            for (Class<?> aClass : classes) {
+                Bean beanAnno = aClass.getAnnotation(Bean.class);
+                if(beanAnno != null){
+                    String beanId = beanAnno.value();
+                    if(StringUtils.isEmpty(beanId)){
+                        beanId = aClass.getSimpleName();
+                        beanId = StringUtils.uncapitalize(beanId);
+                    }
+                    try {
+                        Object bean = aClass.newInstance();
+                        Field[] fields = aClass.getDeclaredFields();
+                        for (Field field : fields) {
+                            Annotation[] annotations = field.getAnnotations();
+                            for (Annotation annotation : annotations) {
+                                if(annotation instanceof Inject){
+                                    field.setAccessible(true);
+                                    //注入bean
+                                    //TODO 接口注入逻辑
+                                    field.set(bean, field.getType().newInstance());
+                                }
+                            }
+                        }
+                        beansMap.get().put(beanId, bean);
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 通过xml初始化Bean
+     */
+    public static void initBeanFromXml(){
+        if(beansMap.get() == null){
+            beansMap.set(new HashMap<>());
+        }
         ClassPathResource classPathResource = new ClassPathResource("/file/BeanFactory.xml");
         try {
             InputStream inputStream = classPathResource.getInputStream();
@@ -46,13 +108,13 @@ public class BeanFactory {
                     continue;
                 }
                 Object o = clz.newInstance();
-                beansMap.put(id, o);
+                beansMap.get().put(id, o);
             }
             List<Element> properties = rootElement.selectNodes("//property");
             for (Element property : properties) {
                 String ref = property.attributeValue("ref");
                 String beanId = property.getParent().attributeValue("id");
-                Object bean = beansMap.get(beanId);
+                Object bean = beansMap.get().get(beanId);
                 Field[] fields = bean.getClass().getDeclaredFields();
                 for (Field field : fields) {
                     Annotation[] annotations = field.getAnnotations();
@@ -61,7 +123,7 @@ public class BeanFactory {
                             field.setAccessible(true);
                             //注入bean
                             //TODO 接口注入逻辑
-                            field.set(bean, beansMap.get(ref));
+                            field.set(bean, beansMap.get().get(ref));
                         }
                     }
                 }
@@ -74,11 +136,12 @@ public class BeanFactory {
             e.printStackTrace();
         }
     }
+
     public static Object getBean(String beanName){
-        return beansMap.get(beanName);
+        return beansMap.get().get(beanName);
     }
     public static void main(String[] args) {
-        BeanFactory beanFactory = new BeanFactory();
+        new BeanFactory();
         UserService userService = (UserService) BeanFactory.getBean("userService");
         userService.test();
     }
