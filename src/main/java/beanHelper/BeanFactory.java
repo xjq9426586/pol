@@ -15,9 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Author: xujunqian
@@ -60,18 +58,6 @@ public class BeanFactory {
                     }
                     try {
                         Object bean = aClass.newInstance();
-                        Field[] fields = aClass.getDeclaredFields();
-                        for (Field field : fields) {
-                            Annotation[] annotations = field.getAnnotations();
-                            for (Annotation annotation : annotations) {
-                                if(annotation instanceof Inject){
-                                    field.setAccessible(true);
-                                    //注入bean
-                                    //TODO 接口注入逻辑
-                                    field.set(bean, field.getType().newInstance());
-                                }
-                            }
-                        }
                         beansMap.get().put(beanId, bean);
                     } catch (InstantiationException e) {
                         e.printStackTrace();
@@ -80,7 +66,50 @@ public class BeanFactory {
                     }
                 }
             }
+            beansMap.get();
+            dependence(beansMap);
         }
+    }
+
+    /**
+     * 依赖注入
+     * @param beansMap
+     */
+    private static void dependence(ThreadLocal<HashMap<String, Object>> beansMap){
+        Map<String, Object> beans = beansMap.get();
+        beans.forEach((beanId, bean) -> {
+            Field[] fields = bean.getClass().getDeclaredFields();
+            try {
+                for (Field field : fields) {
+                    Annotation[] annotations = field.getAnnotations();
+                    for (Annotation annotation : annotations) {
+                        if(annotation instanceof Inject){
+                            String value = ((Inject) annotation).value();
+                            field.setAccessible(true);
+                            Class diClz = field.getType();
+                            //注入bean
+                            if(StringUtils.isNotEmpty(value)){
+                                field.set(bean, beans.get(value));
+                            }else {
+                                //如果注入的是接口，先找到实现类，多个实现类处理
+                                if(diClz.isInterface()){
+
+                                }else {
+                                    field.set(bean, diClz.newInstance());
+                                }
+                            }
+
+                        }
+                    }
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     /**
@@ -142,7 +171,7 @@ public class BeanFactory {
     }
     public static void main(String[] args) {
         new BeanFactory();
-        UserService userService = (UserService) BeanFactory.getBean("userService");
+        UserServiceImpl userService = (UserServiceImpl) BeanFactory.getBean("userServiceImpl");
         userService.test();
     }
 }

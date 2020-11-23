@@ -1,19 +1,10 @@
 package beanHelper;
 
-import annotation.Bean;
-import annotation.Inject;
-
 /**
  * @Author: xujunqian
- * @Date: 2020/11/19 17:19
+ * @Date: 2020/11/20 13:41
  * @Description:
  */
-@Bean
-public class UserService {
-    @Inject
-    private UserDao userDao;
-
-    public void test(){
-        userDao.say();
-    }
+public interface UserService {
+    public void test();
 }

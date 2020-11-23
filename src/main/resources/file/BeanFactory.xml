@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
     <bean id="userService"
-          class="beanHelper.UserService">
+          class="beanHelper.UserServiceImpl">
         <property ref="userDao"></property>
     </bean>
     <bean id="userDao"
