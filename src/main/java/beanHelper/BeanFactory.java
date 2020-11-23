@@ -42,7 +42,7 @@ public class BeanFactory {
      * 通过注解方式初始化bean，扫描packagePath下所有加上@Bean注解的类
      * @param packagePath
      */
-    public static void initBeanFromAnnotation(String[] packagePath){
+    private static void initBeanFromAnnotation(String[] packagePath){
         if(beansMap.get() == null){
             beansMap.set(new HashMap<>());
         }
@@ -53,8 +53,7 @@ public class BeanFactory {
                 if(beanAnno != null){
                     String beanId = beanAnno.value();
                     if(StringUtils.isEmpty(beanId)){
-                        beanId = aClass.getSimpleName();
-                        beanId = StringUtils.uncapitalize(beanId);
+                        beanId = getDependenceBeanId(aClass);
                     }
                     try {
                         Object bean = aClass.newInstance();
@@ -87,24 +86,26 @@ public class BeanFactory {
                             String value = ((Inject) annotation).value();
                             field.setAccessible(true);
                             Class diClz = field.getType();
-                            //注入bean
-                            if(StringUtils.isNotEmpty(value)){
-                                field.set(bean, beans.get(value));
-                            }else {
+                            //注入bean,如果已定义value 则直接取value 作为注入的beanId
+                            if (StringUtils.isEmpty(value)) {
                                 //如果注入的是接口，先找到实现类，多个实现类处理
                                 if(diClz.isInterface()){
-
+                                    Set<Class<?>> allInterfaceAchieveClass = ClassHelper.getAllInterfaceAchieveClass(diClz);
+                                    if(allInterfaceAchieveClass.size() > 1){
+                                        log.error("多个实现类，@Inject 未设置value");
+                                        throw new RuntimeException("多个实现类，@Inject 未设置value");
+                                    }else {
+                                        value = getDependenceBeanId(allInterfaceAchieveClass.iterator().next());
+                                    }
                                 }else {
-                                    field.set(bean, diClz.newInstance());
+                                    value = getDependenceBeanId(diClz);
                                 }
                             }
-
+                            field.set(bean, beans.get(value));
                         }
                     }
                 }
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
                 e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -115,7 +116,7 @@ public class BeanFactory {
     /**
      * 通过xml初始化Bean
      */
-    public static void initBeanFromXml(){
+    private static void initBeanFromXml(){
         if(beansMap.get() == null){
             beansMap.set(new HashMap<>());
         }
@@ -169,9 +170,14 @@ public class BeanFactory {
     public static Object getBean(String beanName){
         return beansMap.get().get(beanName);
     }
+
+    private static String getDependenceBeanId(Class clz){
+        String beanId = StringUtils.uncapitalize(clz.getSimpleName());
+        return beanId;
+    }
     public static void main(String[] args) {
         new BeanFactory();
-        UserServiceImpl userService = (UserServiceImpl) BeanFactory.getBean("userServiceImpl");
+        UserApiImpl userService = (UserApiImpl) BeanFactory.getBean("userApiImpl");
         userService.test();
     }
 }

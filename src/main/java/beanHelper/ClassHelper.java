@@ -2,6 +2,7 @@ package beanHelper;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -11,6 +12,34 @@ import java.util.jar.JarFile;
  
 public class ClassHelper {
 
+    public static Set<Class<?>> getAllInterfaceAchieveClass(Class clazz){
+        Set<Class<?>> classes = new LinkedHashSet<>();
+        Set<Class<?>> allClass = getClzFromPkg(clazz.getPackage().getName());
+        /**
+         * 循环判断路径下的所有类是否实现了指定的接口
+         * 并且排除接口类自己
+         */
+        for (Class<?> aClass : allClass) {
+            //排除抽象类
+            if(Modifier.isAbstract(aClass.getModifiers())){
+                continue;
+            }
+            //判断是不是实现了接口
+            if (clazz.isAssignableFrom(aClass)) {
+                //排除掉自己
+                if (!clazz.equals(allClass)) {
+                    classes.add(aClass);
+                }
+            }
+        }
+        return classes;
+    }
+
+    /**
+     * 获取包下的类
+     * @param pkg
+     * @return
+     */
     public static Set<Class<?>> getClzFromPkg(String pkg) {
      //第一个class类的集合
         Set<Class<?>> classes = new LinkedHashSet<>();
