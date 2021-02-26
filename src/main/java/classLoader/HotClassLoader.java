@@ -1,14 +1,14 @@
 package classLoader;
- 
+
 import java.net.URL;
 import java.net.URLClassLoader;
- 
+
 public class HotClassLoader extends URLClassLoader {
- 
+
     public HotClassLoader(URL[] urls) {
         super(urls);
     }
- 
+
     // 打破双亲委派模式，保证自己的类会被自己的classloader加载
     @Override
     protected synchronized Class<?> loadClass(String name, boolean resolve)
@@ -21,10 +21,10 @@ public class HotClassLoader extends URLClassLoader {
             } catch (Exception e) {
             }
         }
-        if(c == null){
+        if (c == null) {
             c = super.loadClass(name, resolve);
         }
         return c;
     }
- 
+
 }
