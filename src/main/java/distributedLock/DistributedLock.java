@@ -9,15 +9,17 @@ import java.util.List;
 import java.util.UUID;
 
 public class DistributedLock {
- 
+
     private final JedisPool jedisPool;
- 
+
+
     public DistributedLock(JedisPool jedisPool) {
         this.jedisPool = jedisPool;
     }
- 
+
     /**
      * 加锁
+     *
      * @param lockName       锁的key
      * @param acquireTimeout 获取超时时间
      * @param timeout        锁的超时时间
@@ -35,11 +37,12 @@ public class DistributedLock {
             String lockKey = "lock:" + lockName;
             // 超时时间，上锁后超过此时间则自动释放锁
             int lockExpire = (int) (timeout / 1000);
- 
+
             // 获取锁的超时时间，超过这个时间则放弃获取锁
             long end = System.currentTimeMillis() + acquireTimeout;
             while (System.currentTimeMillis() < end) {
-                if (conn.setnx(lockKey, identifier) == 1) {
+                Long setnx = conn.setnx(lockKey, identifier);
+                if (setnx.longValue() == 1l) {
                     conn.expire(lockKey, lockExpire);
                     // 返回value值，用于释放锁时间确认
                     retIdentifier = identifier;
@@ -49,9 +52,10 @@ public class DistributedLock {
                 if (conn.ttl(lockKey) == -1) {
                     conn.expire(lockKey, lockExpire);
                 }
- 
+
+                //每0.5s重试一次获取锁
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -65,9 +69,10 @@ public class DistributedLock {
         }
         return retIdentifier;
     }
- 
+
     /**
      * 释放锁
+     *
      * @param lockName   锁的key
      * @param identifier 释放锁的标识
      * @return
