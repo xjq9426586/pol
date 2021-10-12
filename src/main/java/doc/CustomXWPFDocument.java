@@ -20,156 +20,156 @@ import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline
  *
  */
 public class CustomXWPFDocument extends XWPFDocument {
-        public CustomXWPFDocument(InputStream in) throws IOException {
-                super(in);
+    public CustomXWPFDocument(InputStream in) throws IOException {
+        super(in);
+    }
+
+    /**
+     *
+     */
+    public CustomXWPFDocument() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+    /**
+     * @param pkg
+     * @throws IOException
+     */
+    public CustomXWPFDocument(OPCPackage pkg) throws IOException {
+        super(pkg);
+        // TODO Auto-generated constructor stub
+    }
+
+    public void createPicture(String id, int width, int height) {
+        final int EMU = 9525;
+        width *= EMU;
+        height *= EMU;
+        String blipId = id;
+
+        CTInline inline = createParagraph().createRun().getCTR()
+                .addNewDrawing().addNewInline();
+
+        String picXml = ""
+                + "<a:graphic xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\">"
+                + "   <a:graphicData uri=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">"
+                + "      <pic:pic xmlns:pic=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">"
+                + "         <pic:nvPicPr>" + "            <pic:cNvPr id=\"199\" name=\"Generated\"/>"
+                + "            <pic:cNvPicPr/>"
+                + "         </pic:nvPicPr>"
+                + "         <pic:blipFill>"
+                + "            <a:blip r:embed=\""
+                + blipId
+                + "\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\"/>"
+                + "            <a:stretch>"
+                + "               <a:fillRect/>"
+                + "            </a:stretch>"
+                + "         </pic:blipFill>"
+                + "         <pic:spPr>"
+                + "            <a:xfrm>"
+                + "               <a:off x=\"0\" y=\"0\"/>"
+                + "               <a:ext cx=\""
+                + width
+                + "\" cy=\""
+                + height
+                + "\"/>"
+                + "            </a:xfrm>"
+                + "            <a:prstGeom prst=\"rect\">"
+                + "               <a:avLst/>"
+                + "            </a:prstGeom>"
+                + "         </pic:spPr>"
+                + "      </pic:pic>"
+                + "   </a:graphicData>" + "</a:graphic>";
+
+        // CTGraphicalObjectData graphicData =
+        inline.addNewGraphic().addNewGraphicData();
+        XmlToken xmlToken = null;
+        try {
+            xmlToken = XmlToken.Factory.parse(picXml);
+        } catch (XmlException xe) {
+            xe.printStackTrace();
         }
+        inline.set(xmlToken);
+        // graphicData.set(xmlToken);
 
-        /**
-         *
-         */
-        public CustomXWPFDocument() {
-                super();
-                // TODO Auto-generated constructor stub
+        inline.setDistT(0);
+        inline.setDistB(0);
+        inline.setDistL(0);
+        inline.setDistR(0);
+
+        CTPositiveSize2D extent = inline.addNewExtent();
+        extent.setCx(width);
+        extent.setCy(height);
+
+        CTNonVisualDrawingProps docPr = inline.addNewDocPr();
+        docPr.setId(0);
+        docPr.setName("图片" + id);
+        docPr.setDescr("甩葱玩具");
+    }
+
+    public void createPicture(String id, int width, int height, XWPFRun xwpfRun) {
+        final int EMU = 9525;
+        width *= EMU;
+        height *= EMU;
+        String blipId = id;
+
+        CTInline inline = xwpfRun.getCTR()
+                .addNewDrawing().addNewInline();
+
+        String picXml = ""
+                + "<a:graphic xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\">"
+                + "   <a:graphicData uri=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">"
+                + "      <pic:pic xmlns:pic=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">"
+                + "         <pic:nvPicPr>" + "            <pic:cNvPr id=\"199\" name=\"Generated\"/>"
+                + "            <pic:cNvPicPr/>"
+                + "         </pic:nvPicPr>"
+                + "         <pic:blipFill>"
+                + "            <a:blip r:embed=\""
+                + blipId
+                + "\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\"/>"
+                + "            <a:stretch>"
+                + "               <a:fillRect/>"
+                + "            </a:stretch>"
+                + "         </pic:blipFill>"
+                + "         <pic:spPr>"
+                + "            <a:xfrm>"
+                + "               <a:off x=\"0\" y=\"0\"/>"
+                + "               <a:ext cx=\""
+                + width
+                + "\" cy=\""
+                + height
+                + "\"/>"
+                + "            </a:xfrm>"
+                + "            <a:prstGeom prst=\"rect\">"
+                + "               <a:avLst/>"
+                + "            </a:prstGeom>"
+                + "         </pic:spPr>"
+                + "      </pic:pic>"
+                + "   </a:graphicData>" + "</a:graphic>";
+
+        // CTGraphicalObjectData graphicData =
+        inline.addNewGraphic().addNewGraphicData();
+        XmlToken xmlToken = null;
+        try {
+            xmlToken = XmlToken.Factory.parse(picXml);
+        } catch (XmlException xe) {
+            xe.printStackTrace();
         }
+        inline.set(xmlToken);
+        // graphicData.set(xmlToken);
 
-        /**
-         * @param pkg
-         * @throws IOException
-         */
-        public CustomXWPFDocument(OPCPackage pkg) throws IOException {
-                super(pkg);
-                // TODO Auto-generated constructor stub
-        }
+        inline.setDistT(0);
+        inline.setDistB(0);
+        inline.setDistL(0);
+        inline.setDistR(0);
 
-        public void createPicture(String id, int width, int height) {
-                final int EMU = 9525;
-                width *= EMU;
-                height *= EMU;
-                String blipId = id;
+        CTPositiveSize2D extent = inline.addNewExtent();
+        extent.setCx(width);
+        extent.setCy(height);
 
-                CTInline inline = createParagraph().createRun().getCTR()
-                        .addNewDrawing().addNewInline();
-
-                String picXml = ""
-                        + "<a:graphic xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\">"
-                        + "   <a:graphicData uri=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">"
-                        + "      <pic:pic xmlns:pic=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">"
-                        + "         <pic:nvPicPr>" + "            <pic:cNvPr id=\"199\" name=\"Generated\"/>"
-                        + "            <pic:cNvPicPr/>"
-                        + "         </pic:nvPicPr>"
-                        + "         <pic:blipFill>"
-                        + "            <a:blip r:embed=\""
-                        + blipId
-                        + "\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\"/>"
-                        + "            <a:stretch>"
-                        + "               <a:fillRect/>"
-                        + "            </a:stretch>"
-                        + "         </pic:blipFill>"
-                        + "         <pic:spPr>"
-                        + "            <a:xfrm>"
-                        + "               <a:off x=\"0\" y=\"0\"/>"
-                        + "               <a:ext cx=\""
-                        + width
-                        + "\" cy=\""
-                        + height
-                        + "\"/>"
-                        + "            </a:xfrm>"
-                        + "            <a:prstGeom prst=\"rect\">"
-                        + "               <a:avLst/>"
-                        + "            </a:prstGeom>"
-                        + "         </pic:spPr>"
-                        + "      </pic:pic>"
-                        + "   </a:graphicData>" + "</a:graphic>";
-
-                // CTGraphicalObjectData graphicData =
-                inline.addNewGraphic().addNewGraphicData();
-                XmlToken xmlToken = null;
-                try {
-                        xmlToken = XmlToken.Factory.parse(picXml);
-                } catch (XmlException xe) {
-                        xe.printStackTrace();
-                }
-                inline.set(xmlToken);
-                // graphicData.set(xmlToken);
-
-                inline.setDistT(0);
-                inline.setDistB(0);
-                inline.setDistL(0);
-                inline.setDistR(0);
-
-                CTPositiveSize2D extent = inline.addNewExtent();
-                extent.setCx(width);
-                extent.setCy(height);
-
-                CTNonVisualDrawingProps docPr = inline.addNewDocPr();
-                docPr.setId(0);
-                docPr.setName("图片" + id);
-                docPr.setDescr("甩葱玩具");
-        }
-
-        public void createPicture(String id, int width, int height, XWPFRun xwpfRun) {
-                final int EMU = 9525;
-                width *= EMU;
-                height *= EMU;
-                String blipId = id;
-
-                CTInline inline = xwpfRun.getCTR()
-                        .addNewDrawing().addNewInline();
-
-                String picXml = ""
-                        + "<a:graphic xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\">"
-                        + "   <a:graphicData uri=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">"
-                        + "      <pic:pic xmlns:pic=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">"
-                        + "         <pic:nvPicPr>" + "            <pic:cNvPr id=\"199\" name=\"Generated\"/>"
-                        + "            <pic:cNvPicPr/>"
-                        + "         </pic:nvPicPr>"
-                        + "         <pic:blipFill>"
-                        + "            <a:blip r:embed=\""
-                        + blipId
-                        + "\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\"/>"
-                        + "            <a:stretch>"
-                        + "               <a:fillRect/>"
-                        + "            </a:stretch>"
-                        + "         </pic:blipFill>"
-                        + "         <pic:spPr>"
-                        + "            <a:xfrm>"
-                        + "               <a:off x=\"0\" y=\"0\"/>"
-                        + "               <a:ext cx=\""
-                        + width
-                        + "\" cy=\""
-                        + height
-                        + "\"/>"
-                        + "            </a:xfrm>"
-                        + "            <a:prstGeom prst=\"rect\">"
-                        + "               <a:avLst/>"
-                        + "            </a:prstGeom>"
-                        + "         </pic:spPr>"
-                        + "      </pic:pic>"
-                        + "   </a:graphicData>" + "</a:graphic>";
-
-                // CTGraphicalObjectData graphicData =
-                inline.addNewGraphic().addNewGraphicData();
-                XmlToken xmlToken = null;
-                try {
-                        xmlToken = XmlToken.Factory.parse(picXml);
-                } catch (XmlException xe) {
-                        xe.printStackTrace();
-                }
-                inline.set(xmlToken);
-                // graphicData.set(xmlToken);
-
-                inline.setDistT(0);
-                inline.setDistB(0);
-                inline.setDistL(0);
-                inline.setDistR(0);
-
-                CTPositiveSize2D extent = inline.addNewExtent();
-                extent.setCx(width);
-                extent.setCy(height);
-
-                CTNonVisualDrawingProps docPr = inline.addNewDocPr();
-                docPr.setId(0);
-                docPr.setName("图片" + id);
-                docPr.setDescr("甩葱玩具");
-        }
+        CTNonVisualDrawingProps docPr = inline.addNewDocPr();
+        docPr.setId(0);
+        docPr.setName("图片" + id);
+        docPr.setDescr("甩葱玩具");
+    }
 }

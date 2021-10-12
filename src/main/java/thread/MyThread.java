@@ -1,17 +1,30 @@
 package thread;
 
-public class MyThread extends Thread {
-    
-    private String str;
-    
-    public MyThread(String str) {
-		super();
-		this.str = str;
-	}
+import java.util.LinkedHashMap;
 
-	@Override
+public class MyThread extends Thread {
+
+    private String str;
+
+    public MyThread(String str) {
+        super();
+        this.str = str;
+    }
+
+    @Override
     public void run() {
-		System.out.println(str);
-			
+        for (int i = 0; i < 3; i++) {
+            System.out.println(str + i);
+        }
+
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        LinkedHashMap<Object, Object> objectObjectLinkedHashMap = new LinkedHashMap<>();
+        MyThread myThread = new MyThread("A");
+        myThread.start();
+        myThread.join();
+        MyThread myThread2 = new MyThread("B");
+        myThread2.start();
     }
 }

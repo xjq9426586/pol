@@ -1,10 +1,10 @@
 package interfaceoftest;
 
-public class Y implements Person{
+public class Y implements Person {
 
-	@Override
-	public String say() {
-		return "sya y";
-	}
+    @Override
+    public String say() {
+        return "sya y";
+    }
 
 }

@@ -39,7 +39,7 @@ public class MapGroupTest {
         list.sort(comparator);
         //分组后不改变顺序
         LinkedHashMap m = list.stream().collect(Collectors.groupingBy(e -> e.get("a"), LinkedHashMap::new, Collectors.toList()));
-
+        System.out.println(m);
         //Map m = list.stream().collect(Collectors.groupingBy(e -> e.get("a")));
         List a = new ArrayList();
         m.forEach((k, v) -> {

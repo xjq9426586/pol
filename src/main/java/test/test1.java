@@ -14,20 +14,20 @@ import nullTest.student;
 import nullTest.teacher;
 
 public class test1 {
-	public static void main(String[] args) throws NoSuchMethodException, SecurityException, Exception {
-		test1.test();
-		String str="{id:1,type:1}";
-		JSONObject json = new JSONObject();
-		//json.put("id", 1);
-		//json.put("tList", "");
-		json=JSONObject.fromObject(str);
-		Map<String, Object> map = new HashMap<>();
-		map.put("tList", teacher.class);
-		student s = new student();
-		s = (student) JSONObject.toBean(json,student.class);
-		teacher t = (teacher) JSONObject.toBean(json.getJSONObject("t1"), teacher.class);
-		
-		System.out.println("s".equals(s.getT()));
+    public static void main(String[] args) throws NoSuchMethodException, SecurityException, Exception {
+        test1.test();
+        String str = "{id:1,type:1}";
+        JSONObject json = new JSONObject();
+        //json.put("id", 1);
+        //json.put("tList", "");
+        json = JSONObject.fromObject(str);
+        Map<String, Object> map = new HashMap<>();
+        map.put("tList", teacher.class);
+        student s = new student();
+        s = (student) JSONObject.toBean(json, student.class);
+        teacher t = (teacher) JSONObject.toBean(json.getJSONObject("t1"), teacher.class);
+
+        System.out.println("s".equals(s.getT()));
 		
 		/*student s = new student();
 		s.setId(1);
@@ -57,21 +57,23 @@ public class test1 {
          }
          String name = s.getName();
          System.out.println(name+"p");*/
-	}
-	 // 把一个字符串的第一个字母大写、效率是最高的、  
-	     private static String getMethodName(String fildeName) throws Exception{  
-	        byte[] items = fildeName.getBytes();  
-	        items[0] = (byte) (items[0] - 'a' + 'A');  
-	         return new String(items);  
-	     }  
-	public static String test(){
-		try {
-			String s="yuu";
-			System.out.println("try"+Integer.valueOf(s));
-			return "333";
-		} catch (Exception e) {
-			
-		}
-		return null;
-	}
+    }
+
+    // 把一个字符串的第一个字母大写、效率是最高的、
+    private static String getMethodName(String fildeName) throws Exception {
+        byte[] items = fildeName.getBytes();
+        items[0] = (byte) (items[0] - 'a' + 'A');
+        return new String(items);
+    }
+
+    public static String test() {
+        try {
+            String s = "yuu";
+            System.out.println("try" + Integer.valueOf(s));
+            return "333";
+        } catch (Exception e) {
+
+        }
+        return null;
+    }
 }

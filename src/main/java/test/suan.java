@@ -17,11 +17,11 @@ public class suan {
         String s = "dsadsadas<peter>dsadasdas<lionel>\"www.163.com\"<kenny><>";
         Pattern p = Pattern.compile("(<[^>]*>)");
         Matcher m = p.matcher(s);
-        List<String> result=new ArrayList<String>();
-        while(m.find()){
+        List<String> result = new ArrayList<String>();
+        while (m.find()) {
             result.add(m.group());
         }
-        for(String s1:result){
+        for (String s1 : result) {
             System.out.println(s1);
         }
 

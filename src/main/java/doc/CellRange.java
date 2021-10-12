@@ -15,19 +15,29 @@ public class CellRange {
 
     public static final int ROW_MERGE = 1;
 
-    /** 合并类型（0-col,1-row）  **/
+    /**
+     * 合并类型（0-col,1-row）
+     **/
     private int mergeType;
 
-    /** 起始列  **/
+    /**
+     * 起始列
+     **/
     private int startCol;
 
-    /** 结束列  **/
+    /**
+     * 结束列
+     **/
     private int endCol;
 
-    /** 起始行  **/
+    /**
+     * 起始行
+     **/
     private int startRow;
 
-    /** 结束行  **/
+    /**
+     * 结束行
+     **/
     private int endRow;
 
     public CellRange(int startCol, int endCol, int startRow, int endRow, int mergeType) {
@@ -37,6 +47,7 @@ public class CellRange {
         this.endRow = endRow;
         this.mergeType = mergeType;
     }
+
     public CellRange(int startCol, int endCol, int startRow, int endRow) {
         this.startCol = startCol;
         this.endCol = endCol;
@@ -44,8 +55,9 @@ public class CellRange {
         this.endRow = endRow;
         this.mergeType = mergeType;
     }
-    public void mergeCells(XWPFTable table){
-        switch(this.mergeType) {
+
+    public void mergeCells(XWPFTable table) {
+        switch (this.mergeType) {
             case CellRange.COL_MERGE:
                 this.mergeCellsHorizontal(table);
                 break;
@@ -57,12 +69,13 @@ public class CellRange {
 
     /**
      * word跨行并单元格
+     *
      * @param table
      */
     public void mergeCellsVertically(XWPFTable table) {
         for (int rowIndex = this.startRow; rowIndex <= this.endRow; rowIndex++) {
             XWPFTableCell cell = table.getRow(rowIndex).getCell(this.startCol);
-            if ( rowIndex == this.startRow ) {
+            if (rowIndex == this.startRow) {
                 cell.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.RESTART);
             } else {
                 cell.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.CONTINUE);
@@ -72,12 +85,13 @@ public class CellRange {
 
     /**
      * word跨列合并单元格
+     *
      * @param table
      */
-    public  void mergeCellsHorizontal(XWPFTable table) {
+    public void mergeCellsHorizontal(XWPFTable table) {
         for (int cellIndex = this.startCol; cellIndex <= this.endCol; cellIndex++) {
             XWPFTableCell cell = table.getRow(this.startRow).getCell(cellIndex);
-            if ( cellIndex == this.startCol ) {
+            if (cellIndex == this.startCol) {
                 cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
             } else {
                 cell.getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);

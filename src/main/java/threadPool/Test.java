@@ -15,7 +15,7 @@ public class Test {
             Future<?> future = exector.submit(() -> {
                 try {
                     Thread.sleep(1000);
-                }catch(Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 System.out.println("正在执行线程！i=" + finalI);
@@ -23,14 +23,14 @@ public class Test {
             Future<?> future2 = exector.submit(() -> {
                 try {
                     Thread.sleep(1000);
-                }catch(Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 System.out.println("正在执行线程2！i=" + finalI);
             });
 
-            while(true) {
-                if(future.isDone() && future2.isDone()) {
+            while (true) {
+                if (future.isDone() && future2.isDone()) {
                     System.out.println("主线程已经执行完了");
                     future.cancel(true);
                     System.out.println(future.isCancelled());

@@ -1,5 +1,5 @@
 package excel;
- 
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -15,40 +15,35 @@ import org.apache.poi.xssf.usermodel.*;
 
 /**
  * 基于POI实现的Excel工具类
- * 
- * 
- * 
  */
 public class XssfExcelHelper extends ExcelHelper {
- 
+
     private static XssfExcelHelper instance = null; // 单例对象
- 
+
     private File file; // 操作文件
- 
+
     /**
      * 私有化构造方法
-     * 
-     * @param file
-     *            文件对象
+     *
+     * @param file 文件对象
      */
     private XssfExcelHelper(File file) {
         super();
         this.file = file;
     }
- 
+
     public File getFile() {
         return file;
     }
- 
+
     public void setFile(File file) {
         this.file = file;
     }
- 
+
     /**
      * 获取单例对象并进行初始化
-     * 
-     * @param file
-     *            文件对象
+     *
+     * @param file 文件对象
      * @return 返回初始化后的单例对象
      */
     public static XssfExcelHelper getInstance(File file) {
@@ -68,21 +63,20 @@ public class XssfExcelHelper extends ExcelHelper {
         }
         return instance;
     }
- 
+
     /**
      * 获取单例对象并进行初始化
-     * 
-     * @param filePath
-     *            文件路径
+     *
+     * @param filePath 文件路径
      * @return 返回初始化后的单例对象
      */
     public static XssfExcelHelper getInstance(String filePath) {
         return getInstance(new File(filePath));
     }
- 
+
     @Override
     public <T> List<T> readExcel(Class<T> clazz, String[] fieldNames,
-            int sheetNo, boolean hasTitle) throws Exception {
+                                 int sheetNo, boolean hasTitle) throws Exception {
         List<T> dataModels = new ArrayList<T>();
         // 获取excel工作簿
         XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(file));
@@ -125,7 +119,7 @@ public class XssfExcelHelper extends ExcelHelper {
 
     @Override
     public <T> void writeExcel(Class<T> clazz, List<T> dataModels,
-            String[] fieldNames, String[] titles) throws Exception {
+                               String[] fieldNames, String[] titles) throws Exception {
         XSSFWorkbook workbook = null;
         // 检测文件是否存在，如果存在则修改文件，否则创建文件
         if (file.exists()) {
@@ -185,7 +179,7 @@ public class XssfExcelHelper extends ExcelHelper {
             }
         }
     }
- 
+
     @Override
     protected <T> Object parseValueWithType(String value, Class<?> type) {
         // 由于Excel2007的numeric类型只返回double型，所以对于类型为整型的属性，要提前对numeric字符串进行转换
@@ -195,50 +189,49 @@ public class XssfExcelHelper extends ExcelHelper {
         }
         return super.parseValueWithType(value, type);
     }
- 
+
     /**
      * 获取单元格的内容
-     * 
-     * @param cell
-     *            单元格
+     *
+     * @param cell 单元格
      * @return 返回单元格内容
      */
     private String getCellContent(XSSFCell cell) {
         StringBuffer buffer = new StringBuffer();
         switch (cell.getCellType()) {
-            case XSSFCell.CELL_TYPE_NUMERIC : // 数字
+            case XSSFCell.CELL_TYPE_NUMERIC: // 数字
                 buffer.append(cell.getNumericCellValue());
                 break;
-            case XSSFCell.CELL_TYPE_BOOLEAN : // 布尔
+            case XSSFCell.CELL_TYPE_BOOLEAN: // 布尔
                 buffer.append(cell.getBooleanCellValue());
                 break;
-            case XSSFCell.CELL_TYPE_FORMULA : // 公式
+            case XSSFCell.CELL_TYPE_FORMULA: // 公式
                 buffer.append(cell.getCellFormula());
                 break;
-            case XSSFCell.CELL_TYPE_STRING : // 字符串
+            case XSSFCell.CELL_TYPE_STRING: // 字符串
                 buffer.append(cell.getStringCellValue());
                 break;
-            case XSSFCell.CELL_TYPE_BLANK : // 空值
-            case XSSFCell.CELL_TYPE_ERROR : // 故障
-            default :
+            case XSSFCell.CELL_TYPE_BLANK: // 空值
+            case XSSFCell.CELL_TYPE_ERROR: // 故障
+            default:
                 break;
         }
         return buffer.toString();
     }
 
-	@Override
-	public String checkExcel(String[] fieldNames, boolean hasTitle)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String checkExcel(String[] fieldNames, boolean hasTitle)
+            throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public String excelToJson(String[] fieldNames, boolean hasTitle)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String excelToJson(String[] fieldNames, boolean hasTitle)
+            throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
     public static void main(String[] args) {
         List<String> l = new ArrayList();

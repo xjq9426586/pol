@@ -8,8 +8,8 @@ import java.lang.reflect.Method;
  * @Description:
  */
 public class AnnotationTest {
-    @Route(name = "123", value = "abc")
-    public String get(){
+    @Route(name = "346", value = "abc")
+    public String get() {
         return null;
     }
 
@@ -19,7 +19,7 @@ public class AnnotationTest {
         Method[] methods = at.getClass().getMethods();
         for (Method method : methods) {
             Route t = method.getAnnotation(Route.class);
-            if(t == null) continue;
+            if (t == null) continue;
             System.out.println(t.name());
         }
     }

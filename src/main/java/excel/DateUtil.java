@@ -1,49 +1,45 @@
 package excel;
- 
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
- 
+
 /**
  * 日期工具类：用于日期相关的处理
- * 
+ *
  * @author liujiduo
- * 
  */
 public class DateUtil {
     // Grace style
     public static final String PATTERN_GRACE = "yyyy/MM/dd HH:mm:ss";
     public static final String PATTERN_GRACE_NORMAL = "yyyy/MM/dd HH:mm";
     public static final String PATTERN_GRACE_SIMPLE = "yyyy/MM/dd";
- 
+
     // Classical style
     public static final String PATTERN_CLASSICAL = "yyyy-MM-dd HH:mm:ss";
     public static final String PATTERN_CLASSICAL_NORMAL = "yyyy-MM-dd HH:mm";
     public static final String PATTERN_CLASSICAL_SIMPLE = "yyyy-MM-dd";
- 
+
     private DateUtil() {
         // Cannot be instantiated
     }
- 
+
     /**
      * 根据默认格式将指定字符串解析成日期
-     * 
-     * @param str
-     *            指定字符串
+     *
+     * @param str 指定字符串
      * @return 返回解析后的日期
      */
     public static Date parse(String str) {
         return parse(str, PATTERN_CLASSICAL);
     }
- 
+
     /**
      * 根据指定格式将指定字符串解析成日期
-     * 
-     * @param str
-     *            指定日期
-     * @param pattern
-     *            指定格式
+     *
+     * @param str     指定日期
+     * @param pattern 指定格式
      * @return 返回解析后的日期
      */
     public static Date parse(String str, String pattern) {
@@ -55,109 +51,92 @@ public class DateUtil {
         }
         return null;
     }
- 
+
     /**
      * 根据默认格式将日期转格式化成字符串
-     * 
-     * @param date
-     *            指定日期
+     *
+     * @param date 指定日期
      * @return 返回格式化后的字符串
      */
     public static String format(Date date) {
         return format(date, PATTERN_CLASSICAL);
     }
- 
+
     /**
      * 根据指定格式将指定日期格式化成字符串
-     * 
-     * @param date
-     *            指定日期
-     * @param pattern
-     *            指定格式
+     *
+     * @param date    指定日期
+     * @param pattern 指定格式
      * @return 返回格式化后的字符串
      */
     public static String format(Date date, String pattern) {
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         return sdf.format(date);
     }
- 
+
     /**
      * 获取时间date1与date2相差的秒数
-     * 
-     * @param date1
-     *            起始时间
-     * @param date2
-     *            结束时间
+     *
+     * @param date1 起始时间
+     * @param date2 结束时间
      * @return 返回相差的秒数
      */
     public static int getOffsetSeconds(Date date1, Date date2) {
         int seconds = (int) ((date2.getTime() - date1.getTime()) / 1000);
         return seconds;
     }
- 
+
     /**
      * 获取时间date1与date2相差的分钟数
-     * 
-     * @param date1
-     *            起始时间
-     * @param date2
-     *            结束时间
+     *
+     * @param date1 起始时间
+     * @param date2 结束时间
      * @return 返回相差的分钟数
      */
     public static int getOffsetMinutes(Date date1, Date date2) {
         return getOffsetSeconds(date1, date2) / 60;
     }
- 
+
     /**
      * 获取时间date1与date2相差的小时数
-     * 
-     * @param date1
-     *            起始时间
-     * @param date2
-     *            结束时间
+     *
+     * @param date1 起始时间
+     * @param date2 结束时间
      * @return 返回相差的小时数
      */
     public static int getOffsetHours(Date date1, Date date2) {
         return getOffsetMinutes(date1, date2) / 60;
     }
- 
+
     /**
      * 获取时间date1与date2相差的天数数
-     * 
-     * @param date1
-     *            起始时间
-     * @param date2
-     *            结束时间
+     *
+     * @param date1 起始时间
+     * @param date2 结束时间
      * @return 返回相差的天数
      */
     public static int getOffsetDays(Date date1, Date date2) {
         return getOffsetHours(date1, date2) / 24;
     }
- 
+
     /**
      * 获取时间date1与date2相差的周数
-     * 
-     * @param date1
-     *            起始时间
-     * @param date2
-     *            结束时间
+     *
+     * @param date1 起始时间
+     * @param date2 结束时间
      * @return 返回相差的周数
      */
     public static int getOffsetWeeks(Date date1, Date date2) {
         return getOffsetDays(date1, date2) / 7;
     }
- 
+
     /**
      * 获取重置指定日期的时分秒后的时间
-     * 
-     * @param date
-     *            指定日期
-     * @param hour
-     *            指定小时
-     * @param minute
-     *            指定分钟
-     * @param second
-     *            指定秒
+     *
+     * @param date   指定日期
+     * @param hour   指定小时
+     * @param minute 指定分钟
+     * @param second 指定秒
      * @return 返回重置时分秒后的时间
      */
     public static Date getResetTime(Date date, int hour, int minute, int second) {
@@ -170,40 +149,34 @@ public class DateUtil {
         cal.set(Calendar.MINUTE, second);
         return cal.getTime();
     }
- 
+
     /**
      * 返回指定日期的起始时间
-     * 
-     * @param date
-     *            指定日期（例如2014-08-01）
+     *
+     * @param date 指定日期（例如2014-08-01）
      * @return 返回起始时间（例如2014-08-01 00:00:00）
      */
     public static Date getIntegralStartTime(Date date) {
         return getResetTime(date, 0, 0, 0);
     }
- 
+
     /**
      * 返回指定日期的结束时间
-     * 
-     * @param date
-     *            指定日期（例如2014-08-01）
+     *
+     * @param date 指定日期（例如2014-08-01）
      * @return 返回结束时间（例如2014-08-01 23:59:59）
      */
     public static Date getIntegralEndTime(Date date) {
         return getResetTime(date, 23, 59, 59);
     }
- 
+
     /**
      * 获取指定日期累加年月日后的时间
-     * 
-     * @param date
-     *            指定日期
-     * @param year
-     *            指定年数
-     * @param month
-     *            指定月数
-     * @param day
-     *            指定天数
+     *
+     * @param date  指定日期
+     * @param year  指定年数
+     * @param month 指定月数
+     * @param day   指定天数
      * @return 返回累加年月日后的时间
      */
     public static Date rollDate(Date date, int year, int month, int day) {
@@ -216,38 +189,33 @@ public class DateUtil {
         cal.add(Calendar.DAY_OF_MONTH, day);
         return cal.getTime();
     }
- 
+
     /**
      * 获取指定日期累加指定月数后的时间
-     * 
-     * @param date
-     *            指定日期
-     * @param month
-     *            指定月数
+     *
+     * @param date  指定日期
+     * @param month 指定月数
      * @return 返回累加月数后的时间
      */
     public static Date rollMonth(Date date, int month) {
         return rollDate(date, 0, month, 0);
     }
- 
+
     /**
      * 获取指定日期累加指定天数后的时间
-     * 
-     * @param date
-     *            指定日期
-     * @param day
-     *            指定天数
+     *
+     * @param date 指定日期
+     * @param day  指定天数
      * @return 返回累加天数后的时间
      */
     public static Date rollDay(Date date, int day) {
         return rollDate(date, 0, 0, day);
     }
- 
+
     /**
      * 计算指定日期所在月份的天数
-     * 
-     * @param date
-     *            指定日期
+     *
+     * @param date 指定日期
      * @return 返回所在月份的天数
      */
     public static int getDayOfMonth(Date date) {
@@ -258,10 +226,10 @@ public class DateUtil {
         int dayOfMonth = cal.getActualMaximum(Calendar.DATE);
         return dayOfMonth;
     }
- 
+
     /**
      * 获取当月第一天的起始时间，例如2014-08-01 00:00:00
-     * 
+     *
      * @return 返回当月第一天的起始时间
      */
     public static Date getMonthStartTime() {
@@ -269,10 +237,10 @@ public class DateUtil {
         cal.set(Calendar.DAY_OF_MONTH, 1);
         return getIntegralStartTime(cal.getTime());
     }
- 
+
     /**
      * 获取当月最后一天的结束时间，例如2014-08-31 23:59:59
-     * 
+     *
      * @return 返回当月最后一天的结束时间
      */
     public static Date getMonthEndTime() {
@@ -280,10 +248,10 @@ public class DateUtil {
         cal.set(Calendar.DAY_OF_MONTH, getDayOfMonth(cal.getTime()));
         return getIntegralEndTime(cal.getTime());
     }
- 
+
     /**
      * 获取上个月第一天的起始时间，例如2014-07-01 00:00:00
-     * 
+     *
      * @return 返回上个月第一天的起始时间
      */
     public static Date getLastMonthStartTime() {
@@ -292,10 +260,10 @@ public class DateUtil {
         cal.set(Calendar.DAY_OF_MONTH, 1);
         return getIntegralStartTime(cal.getTime());
     }
- 
+
     /**
      * 获取上个月最后一天的结束时间，例如2014-07-31 23:59:59
-     * 
+     *
      * @return 返回上个月最后一天的结束时间
      */
     public static Date getLastMonthEndTime() {
@@ -304,10 +272,10 @@ public class DateUtil {
         cal.set(Calendar.DAY_OF_MONTH, getDayOfMonth(cal.getTime()));
         return getIntegralEndTime(cal.getTime());
     }
- 
+
     /**
      * 获取下个月第一天的起始时间，例如2014-09-01 00:00:00
-     * 
+     *
      * @return 返回下个月第一天的起始时间
      */
     public static Date getNextMonthStartTime() {
@@ -316,10 +284,10 @@ public class DateUtil {
         cal.set(Calendar.DAY_OF_MONTH, 1);
         return getIntegralStartTime(cal.getTime());
     }
- 
+
     /**
      * 获取下个月最后一天的结束时间，例如2014-09-30 23:59:59
-     * 
+     *
      * @return 返回下个月最后一天的结束时间
      */
     public static Date getNextMonthEndTime() {
@@ -328,10 +296,10 @@ public class DateUtil {
         cal.set(Calendar.DAY_OF_MONTH, getDayOfMonth(cal.getTime()));
         return getIntegralEndTime(cal.getTime());
     }
- 
+
     /**
      * 获取当前季度第一天的起始时间
-     * 
+     *
      * @return 返回当前季度第一天的起始时间
      */
     public static Date getQuarterStartTime() {
@@ -349,10 +317,10 @@ public class DateUtil {
         cal.set(Calendar.DAY_OF_MONTH, 1);
         return getIntegralStartTime(cal.getTime());
     }
- 
+
     /**
      * 获取当前季度最后一天的结束时间
-     * 
+     *
      * @return 返回当前季度最后一天的结束时间
      */
     public static Date getQuarterEndTime() {
@@ -370,10 +338,10 @@ public class DateUtil {
         cal.set(Calendar.DAY_OF_MONTH, getDayOfMonth(cal.getTime()));
         return getIntegralEndTime(cal.getTime());
     }
- 
+
     /**
      * 获取前一个工作日
-     * 
+     *
      * @return 返回前一个工作日
      */
     public static Date getPrevWorkday() {
@@ -387,10 +355,10 @@ public class DateUtil {
         }
         return getIntegralStartTime(cal.getTime());
     }
- 
+
     /**
      * 获取下一个工作日
-     * 
+     *
      * @return 返回下个工作日
      */
     public static Date getNextWorkday() {
@@ -404,10 +372,10 @@ public class DateUtil {
         }
         return getIntegralStartTime(cal.getTime());
     }
- 
+
     /**
      * 获取当周的第一个工作日
-     * 
+     *
      * @return 返回第一个工作日
      */
     public static Date getFirstWorkday() {
@@ -415,10 +383,10 @@ public class DateUtil {
         cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         return getIntegralStartTime(cal.getTime());
     }
- 
+
     /**
      * 获取当周的最后一个工作日
-     * 
+     *
      * @return 返回最后一个工作日
      */
     public static Date getLastWorkday() {
@@ -426,12 +394,11 @@ public class DateUtil {
         cal.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
         return getIntegralStartTime(cal.getTime());
     }
- 
+
     /**
      * 判断指定日期是否是工作日
-     * 
-     * @param date
-     *            指定日期
+     *
+     * @param date 指定日期
      * @return 如果是工作日返回true，否则返回false
      */
     public static boolean isWorkday(Date date) {
@@ -442,12 +409,11 @@ public class DateUtil {
         int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
         return !(dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY);
     }
- 
+
     /**
      * 获取指定日期是星期几
-     * 
-     * @param date
-     *            指定日期
+     *
+     * @param date 指定日期
      * @return 返回星期几的描述
      */
     public static String getWeekdayDesc(Date date) {
@@ -459,12 +425,11 @@ public class DateUtil {
         }
         return weeks[cal.get(Calendar.DAY_OF_WEEK) - 1];
     }
- 
+
     /**
      * 获取指定日期距离当前时间的时间差描述（如3小时前、1天前）
-     * 
-     * @param date
-     *            指定日期
+     *
+     * @param date 指定日期
      * @return 返回时间差的描述
      */
     public static String getTimeOffsetDesc(Date date) {
@@ -495,7 +460,7 @@ public class DateUtil {
         int years = monthes / 12;
         return Math.abs(years) + "年" + (years > 0 ? "前" : "后");
     }
- 
+
     /**
      * @param args
      */
@@ -517,5 +482,5 @@ public class DateUtil {
         System.out.println(getLastWorkday());
         System.out.println(getWeekdayDesc(null));
     }
- 
+
 }

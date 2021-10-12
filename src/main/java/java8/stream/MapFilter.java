@@ -1,5 +1,7 @@
 package java8.stream;
 
+import com.jeedev.msdp.utlis.MapUtil;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -18,6 +20,7 @@ public class MapFilter {
                 .filter(x -> predicate.test(x.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
+
     public static void main(String[] args) {
 
         List list = new ArrayList();
@@ -49,18 +52,19 @@ public class MapFilter {
 
         System.out.println(filterByKey(HOSTING1, x -> x.equals("11")));
         System.out.println(HOSTING1.containsValue("digitalocean.com1"));
-
+        boolean f = list.stream().anyMatch(map -> "linode.com".equals(MapUtil.getString((Map) map, "11")));
 
         List<Map<String, Object>> list1 = new ArrayList<>();
         Map<String, Object> map1 = new HashMap<>();
         map1.put("sn", 1);
         Map<String, Object> map2 = new HashMap<>();
-        map2.put("sn", 1);
+        map2.put("sn", 12);
         Map<String, Object> map3 = new HashMap<>();
-        map3.put("sn", 1);
+        map3.put("sn", 13);
         list1.add(map2);
         list1.add(map1);
         list1.add(map3);
+        System.out.println(list1.stream().map(map -> map.get("sn")).collect(Collectors.toList()));
         Comparator<Map<String, Object>> comparator = Comparator.comparing(m -> ((Integer) m.get("sn")));
         list1.sort(comparator.reversed());
         //list1.sort(comparator);

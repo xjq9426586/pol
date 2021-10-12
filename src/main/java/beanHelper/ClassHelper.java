@@ -9,10 +9,10 @@ import java.net.URLDecoder;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
- 
+
 public class ClassHelper {
 
-    public static Set<Class<?>> getAllInterfaceAchieveClass(Class clazz){
+    public static Set<Class<?>> getAllInterfaceAchieveClass(Class clazz) {
         Set<Class<?>> classes = new LinkedHashSet<>();
         Set<Class<?>> allClass = getClzFromPkg(clazz.getPackage().getName());
         /**
@@ -21,7 +21,7 @@ public class ClassHelper {
          */
         for (Class<?> aClass : allClass) {
             //排除抽象类
-            if(Modifier.isAbstract(aClass.getModifiers())){
+            if (Modifier.isAbstract(aClass.getModifiers())) {
                 continue;
             }
             //判断是不是实现了接口
@@ -37,11 +37,12 @@ public class ClassHelper {
 
     /**
      * 获取包下的类
+     *
      * @param pkg
      * @return
      */
     public static Set<Class<?>> getClzFromPkg(String pkg) {
-     //第一个class类的集合
+        //第一个class类的集合
         Set<Class<?>> classes = new LinkedHashSet<>();
         // 获取包的名字 并进行替换
         String pkgDirName = pkg.replace('.', '/');
@@ -70,7 +71,8 @@ public class ClassHelper {
         }
         return classes;
     }
-    private static void findClassesByFile(String pkgName, String pkgPath, Set<Class<?>> classes) {
+
+    public static void findClassesByFile(String pkgName, String pkgPath, Set<Class<?>> classes) {
         // 获取此包的目录 建立一个File
         File dir = new File(pkgPath);
         // 如果不存在或者 也不是目录就直接返回
@@ -78,24 +80,24 @@ public class ClassHelper {
             return;
         }
         File[] dirfiles = dir.listFiles(pathname -> pathname.isDirectory() || pathname.getName().endsWith("class"));
- 
+
         if (dirfiles == null || dirfiles.length == 0) {
             return;
         }
- 
+
         String className;
         Class clz;
         // 循环所有文件
         for (File f : dirfiles) {
-         // 如果是目录 则继续扫描
+            // 如果是目录 则继续扫描
             if (f.isDirectory()) {
-                findClassesByFile(pkgName + "." + f.getName(),pkgPath + "/" + f.getName(),classes);
+                findClassesByFile(pkgName + "." + f.getName(), pkgPath + "/" + f.getName(), classes);
                 continue;
             }
-         // 如果是java类文件 去掉后面的.class 只留下类名
+            // 如果是java类文件 去掉后面的.class 只留下类名
             className = f.getName();
             className = className.substring(0, className.length() - 6);
- 
+
             //加载类
             clz = loadClass(pkgName + "." + className);
             // 添加到集合中去
@@ -104,12 +106,12 @@ public class ClassHelper {
             }
         }
     }
- 
+
     private static void findClassesByJar(String pkgName, JarFile jar, Set<Class<?>> classes) {
         String pkgDir = pkgName.replace(".", "/");
-     // 从此jar包 得到一个枚举类
+        // 从此jar包 得到一个枚举类
         Enumeration<JarEntry> entry = jar.entries();
- 
+
         JarEntry jarEntry;
         String name, className;
         Class<?> claze;
@@ -117,14 +119,14 @@ public class ClassHelper {
         while (entry.hasMoreElements()) {
             // 获取jar里的一个实体 可以是目录 和一些jar包里的其他文件 如META-INF等文
             jarEntry = entry.nextElement();
- 
+
             name = jarEntry.getName();
             // 如果是以/开头的
             if (name.charAt(0) == '/') {
-             // 获取后面的字符串
+                // 获取后面的字符串
                 name = name.substring(1);
             }
- 
+
             if (jarEntry.isDirectory() || !name.startsWith(pkgDir) || !name.endsWith(".class")) {
                 continue;
             }
@@ -139,9 +141,10 @@ public class ClassHelper {
             }
         }
     }
- 
+
     /**
-     *    加载类
+     * 加载类
+     *
      * @param fullClzName 类全名
      * @return
      */
@@ -153,5 +156,5 @@ public class ClassHelper {
         }
         return null;
     }
- 
+
 }

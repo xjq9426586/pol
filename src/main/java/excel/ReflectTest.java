@@ -8,13 +8,13 @@ import java.util.Date;
 
 /**
  * Java通过实例得到实体类中的属性和方法
- * @author Administrator
  *
+ * @author Administrator
  */
 public class ReflectTest {
 
     public static void main(String[] args)
-            throws Exception{
+            throws Exception {
 
         Student student = new Student();
 
@@ -87,6 +87,7 @@ public class ReflectTest {
     }
 
 }
+
 class Student {
 
     private String name;

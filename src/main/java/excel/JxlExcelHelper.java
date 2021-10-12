@@ -1,13 +1,11 @@
 package excel;
- 
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
- 
-
 
 
 import net.sf.json.JSONArray;
@@ -21,43 +19,40 @@ import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
- 
+
 /**
  * 基于JXL实现的Excel工具类
- * 
- * @author liujiduo
- * 
+ *
+ *
  */
 public class JxlExcelHelper extends ExcelHelper {
- 
+
     private static JxlExcelHelper instance = null; // 单例对象
- 
+
     private File file; // 操作文件
- 
+
     /**
      * 私有化构造方法
-     * 
-     * @param file
-     *            文件对象
+     *
+     * @param file 文件对象
      */
     private JxlExcelHelper(File file) {
         super();
         this.file = file;
     }
- 
+
     public File getFile() {
         return file;
     }
- 
+
     public void setFile(File file) {
         this.file = file;
     }
- 
+
     /**
      * 获取单例对象并进行初始化
-     * 
-     * @param file
-     *            文件对象
+     *
+     * @param file 文件对象
      * @return 返回初始化后的单例对象
      */
     public static JxlExcelHelper getInstance(File file) {
@@ -77,37 +72,36 @@ public class JxlExcelHelper extends ExcelHelper {
         }
         return instance;
     }
- 
+
     /**
      * 获取单例对象并进行初始化
-     * 
-     * @param filePath
-     *            文件路径
+     *
+     * @param filePath 文件路径
      * @return 返回初始化后的单例对象
      */
     public static JxlExcelHelper getInstance(String filePath) {
         return getInstance(new File(filePath));
     }
- 
+
     @Override//改进
     public <T> List<T> readExcel(Class<T> clazz, String[] fieldNames,
-            int sheetNo, boolean hasTitle) throws Exception {
+                                 int sheetNo, boolean hasTitle) throws Exception {
         List<T> dataModels = new ArrayList<T>();
         // 获取excel工作簿
         Workbook workbook = Workbook.getWorkbook(file);
         try {
             Sheet sheet = workbook.getSheet(sheetNo);
             int start = hasTitle ? 1 : 0; // 如果有标题则从第二行开始
-            
+
             //Field[] fields = clazz.getDeclaredFields();
             for (int i = start; i < sheet.getRows(); i++) {
                 // 生成实例并通过反射调用setter方法
                 T target = clazz.newInstance();
                 for (int j = 0; j < fieldNames.length; j++) {
-                  String fieldName = fieldNames[j];
-                  //  Field f = fields[j];
-                  //  f.setAccessible(true); // 设置些属性是可以访问的
-                    if (fieldName== null || UID.equals(fieldName)) {
+                    String fieldName = fieldNames[j];
+                    //  Field f = fields[j];
+                    //  f.setAccessible(true); // 设置些属性是可以访问的
+                    if (fieldName == null || UID.equals(fieldName)) {
                         continue; // 过滤serialVersionUID属性
                     }
                     // 获取excel单元格的内容
@@ -122,9 +116,9 @@ public class JxlExcelHelper extends ExcelHelper {
                         ReflectUtil.invokeSetter(target, fieldName,
                                 DateUtil.parse(content));
                     } else {
-                    	 Field field = clazz.getDeclaredField(fieldName);
-                         ReflectUtil.invokeSetter(target, fieldName,
-                                 parseValueWithType(content, field.getType()));
+                        Field field = clazz.getDeclaredField(fieldName);
+                        ReflectUtil.invokeSetter(target, fieldName,
+                                parseValueWithType(content, field.getType()));
                     }
                 }
                 dataModels.add(target);
@@ -136,40 +130,42 @@ public class JxlExcelHelper extends ExcelHelper {
         }
         return dataModels;
     }
+
     @Override
-    public String checkExcel(String[] fieldNames, boolean hasTitle) throws Exception{
-    	  Workbook workbook = Workbook.getWorkbook(file);
-    	  StringBuffer sb=new StringBuffer();
-          try {
-              Sheet sheet = workbook.getSheet(0);
-              int start = hasTitle ? 1 : 0; // 如果有标题则从第二行开始
-              for (int i = start; i < sheet.getRows(); i++) {
-                  for (int j = 0; j < fieldNames.length; j++) {
+    public String checkExcel(String[] fieldNames, boolean hasTitle) throws Exception {
+        Workbook workbook = Workbook.getWorkbook(file);
+        StringBuffer sb = new StringBuffer();
+        try {
+            Sheet sheet = workbook.getSheet(0);
+            int start = hasTitle ? 1 : 0; // 如果有标题则从第二行开始
+            for (int i = start; i < sheet.getRows(); i++) {
+                for (int j = 0; j < fieldNames.length; j++) {
                     String fieldName = fieldNames[j];
-                      if (fieldName== null || UID.equals(fieldName)) {
-                          continue; // 过滤serialVersionUID属性
-                      }
-                      // 获取excel单元格的内容
-                      Cell cell = sheet.getCell(j, i);
-                      String content=cell.getContents();
-                      if (content == null||content.equals("")) {
-                    	  sb.append("第"+(i+1)+"行第"+(j+1)+"单元格不能为空");
-                          continue;
-                      }
-                  }
-              }
-          }finally{
-        	  if (workbook != null) {
-                  workbook.close();
-              }
-          }
-  
-		return sb.toString();
-    	
+                    if (fieldName == null || UID.equals(fieldName)) {
+                        continue; // 过滤serialVersionUID属性
+                    }
+                    // 获取excel单元格的内容
+                    Cell cell = sheet.getCell(j, i);
+                    String content = cell.getContents();
+                    if (content == null || content.equals("")) {
+                        sb.append("第" + (i + 1) + "行第" + (j + 1) + "单元格不能为空");
+                        continue;
+                    }
+                }
+            }
+        } finally {
+            if (workbook != null) {
+                workbook.close();
+            }
+        }
+
+        return sb.toString();
+
     }
+
     @Override
     public <T> void writeExcel(Class<T> clazz, List<T> dataModels,
-            String[] fieldNames, String[] titles) throws Exception {
+                               String[] fieldNames, String[] titles) throws Exception {
         WritableWorkbook workbook = null;
         try {
             // 检测文件是否存在，如果存在则修改文件，否则创建文件
@@ -223,35 +219,36 @@ public class JxlExcelHelper extends ExcelHelper {
             }
         }
     }
+
     @Override
-    public String excelToJson(String[] fieldNames, boolean hasTitle) throws Exception{
-    	  Workbook workbook = Workbook.getWorkbook(file);
-      	JSONArray array = new JSONArray(); 
-      	JSONObject obj = new JSONObject();
-          try {
-              Sheet sheet = workbook.getSheet(0);
-              int start = hasTitle ? 1 : 0; // 如果有标题则从第二行开始
-              for (int i = start; i < sheet.getRows(); i++) {
-                  for (int j = 0; j < fieldNames.length; j++) {
+    public String excelToJson(String[] fieldNames, boolean hasTitle) throws Exception {
+        Workbook workbook = Workbook.getWorkbook(file);
+        JSONArray array = new JSONArray();
+        JSONObject obj = new JSONObject();
+        try {
+            Sheet sheet = workbook.getSheet(0);
+            int start = hasTitle ? 1 : 0; // 如果有标题则从第二行开始
+            for (int i = start; i < sheet.getRows(); i++) {
+                for (int j = 0; j < fieldNames.length; j++) {
                     String fieldName = fieldNames[j];
-                      if (fieldName== null || UID.equals(fieldName)) {
-                          continue; // 过滤serialVersionUID属性
-                      }
-                      // 获取excel单元格的内容
-                      Cell cell = sheet.getCell(j, i);
-                      if (cell == null||cell.equals("")) {
-                          continue;
-                      }
-                     obj.put(fieldName, cell.getContents());
-                  }
-                  array.add(obj);
-              }
-          }finally{
-        	  if (workbook != null) {
-                  workbook.close();
-              }
-          }
-  
-		return array.toString();
+                    if (fieldName == null || UID.equals(fieldName)) {
+                        continue; // 过滤serialVersionUID属性
+                    }
+                    // 获取excel单元格的内容
+                    Cell cell = sheet.getCell(j, i);
+                    if (cell == null || cell.equals("")) {
+                        continue;
+                    }
+                    obj.put(fieldName, cell.getContents());
+                }
+                array.add(obj);
+            }
+        } finally {
+            if (workbook != null) {
+                workbook.close();
+            }
+        }
+
+        return array.toString();
     }
 }

@@ -1,5 +1,5 @@
 package excel;
- 
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -7,7 +7,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
- 
 
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -21,40 +20,37 @@ import org.apache.poi.ss.usermodel.*;
 
 /**
  * 基于POI实现的Excel工具类
- * 
+ *
  * @author liujiduo
- * 
  */
 public class HssfExcelHelper extends ExcelHelper {
- 
+
     private static HssfExcelHelper instance = null; // 单例对象
- 
+
     private File file; // 操作文件
- 
+
     /**
      * 私有化构造方法
-     * 
-     * @param file
-     *            文件对象
+     *
+     * @param file 文件对象
      */
     private HssfExcelHelper(File file) {
         super();
         this.file = file;
     }
- 
+
     public File getFile() {
         return file;
     }
- 
+
     public void setFile(File file) {
         this.file = file;
     }
- 
+
     /**
      * 获取单例对象并进行初始化
-     * 
-     * @param file
-     *            文件对象
+     *
+     * @param file 文件对象
      * @return 返回初始化后的单例对象
      */
     public static HssfExcelHelper getInstance(File file) {
@@ -74,21 +70,20 @@ public class HssfExcelHelper extends ExcelHelper {
         }
         return instance;
     }
- 
+
     /**
      * 获取单例对象并进行初始化
-     * 
-     * @param filePath
-     *            文件路径
+     *
+     * @param filePath 文件路径
      * @return 返回初始化后的单例对象
      */
     public static HssfExcelHelper getInstance(String filePath) {
         return getInstance(new File(filePath));
     }
- 
+
     @Override
     public <T> List<T> readExcel(Class<T> clazz, String[] fieldNames,
-            int sheetNo, boolean hasTitle) throws Exception {
+                                 int sheetNo, boolean hasTitle) throws Exception {
         List<T> dataModels = new ArrayList<T>();
         // 获取excel工作簿
         Workbook workbook = WorkbookFactory.create(new FileInputStream(file));
@@ -127,10 +122,10 @@ public class HssfExcelHelper extends ExcelHelper {
         }
         return dataModels;
     }
- 
+
     @Override
     public <T> void writeExcel(Class<T> clazz, List<T> dataModels,
-            String[] fieldNames, String[] titles) throws Exception {
+                               String[] fieldNames, String[] titles) throws Exception {
         //HSSFWorkbook workbook = null;
         Workbook workbook = null;
         // 检测文件是否存在，如果存在则修改文件，否则创建文件
@@ -190,23 +185,23 @@ public class HssfExcelHelper extends ExcelHelper {
         }
     }
 
-	public String getContents(String[] fieldNames, boolean hasTitle)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public String getContents(String[] fieldNames, boolean hasTitle)
+            throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public String checkExcel(String[] fieldNames, boolean hasTitle)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String checkExcel(String[] fieldNames, boolean hasTitle)
+            throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public String excelToJson(String[] fieldNames, boolean hasTitle)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String excelToJson(String[] fieldNames, boolean hasTitle)
+            throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

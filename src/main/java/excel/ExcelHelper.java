@@ -1,34 +1,29 @@
 package excel;
- 
+
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
- 
+
 /**
  * Excel工具抽象类
- * 
+ *
+ * @param <T> 操作数据类型
  * @author liujiduo
- * 
- * @param <T>
- *            操作数据类型
  */
 public abstract class ExcelHelper {
     /**
      * 对象序列化版本号名称
      */
     public static final String UID = "serialVersionUID";
- 
+
     /**
      * 将指定excel文件中的数据转换成数据列表
-     * 
-     * @param clazz
-     *            数据类型
-     * @param sheetNo
-     *            工作表编号
-     * @param hasTitle
-     *            是否带有标题
+     *
+     * @param clazz    数据类型
+     * @param sheetNo  工作表编号
+     * @param hasTitle 是否带有标题
      * @return 返回转换后的数据列表
      * @throws Exception
      */
@@ -42,48 +37,39 @@ public abstract class ExcelHelper {
         }
         return readExcel(clazz, fieldNames, sheetNo, hasTitle);
     }
- 
+
     /**
      * 将指定excel文件中的数据转换成数据列表
-     * 
-     * @param clazz
-     *            数据类型
-     * @param fieldNames
-     *            属性列表
-     * @param hasTitle
-     *            是否带有标题
+     *
+     * @param clazz      数据类型
+     * @param fieldNames 属性列表
+     * @param hasTitle   是否带有标题
      * @return 返回转换后的数据列表
      * @throws Exception
      */
     public <T> List<T> readExcel(Class<T> clazz, String[] fieldNames,
-            boolean hasTitle) throws Exception {
+                                 boolean hasTitle) throws Exception {
         return readExcel(clazz, fieldNames, 0, hasTitle);
     }
- 
+
     /**
      * 抽象方法：将指定excel文件中的数据转换成数据列表，由子类实现
-     * 
-     * @param clazz
-     *            数据类型
-     * @param fieldNames
-     *            属性列表
-     * @param sheetNo
-     *            工作表编号
-     * @param hasTitle
-     *            是否带有标题
+     *
+     * @param clazz      数据类型
+     * @param fieldNames 属性列表
+     * @param sheetNo    工作表编号
+     * @param hasTitle   是否带有标题
      * @return 返回转换后的数据列表
      * @throws Exception
      */
     public abstract <T> List<T> readExcel(Class<T> clazz, String[] fieldNames,
-            int sheetNo, boolean hasTitle) throws Exception;
- 
+                                          int sheetNo, boolean hasTitle) throws Exception;
+
     /**
      * 写入数据到指定excel文件中
-     * 
-     * @param clazz
-     *            数据类型
-     * @param dataModels
-     *            数据列表
+     *
+     * @param clazz      数据类型
+     * @param dataModels 数据列表
      * @throws Exception
      */
     public <T> void writeExcel(Class<T> clazz, List<T> dataModels)
@@ -96,46 +82,37 @@ public abstract class ExcelHelper {
         }
         writeExcel(clazz, dataModels, fieldNames, fieldNames);
     }
- 
+
     /**
      * 写入数据到指定excel文件中
-     * 
-     * @param clazz
-     *            数据类型
-     * @param dataModels
-     *            数据列表
-     * @param fieldNames
-     *            属性列表
+     *
+     * @param clazz      数据类型
+     * @param dataModels 数据列表
+     * @param fieldNames 属性列表
      * @throws Exception
      */
     public <T> void writeExcel(Class<T> clazz, List<T> dataModels,
-            String[] fieldNames) throws Exception {
+                               String[] fieldNames) throws Exception {
         writeExcel(clazz, dataModels, fieldNames, fieldNames);
     }
 
     /**
      * 抽象方法：写入数据到指定excel文件中，由子类实现
      *
-     * @param clazz
-     *            数据类型
-     * @param dataModels
-     *            数据列表
-     * @param fieldNames
-     *            属性列表
-     * @param titles
-     *            标题列表
+     * @param clazz      数据类型
+     * @param dataModels 数据列表
+     * @param fieldNames 属性列表
+     * @param titles     标题列表
      * @throws Exception
      */
     public abstract <T> void writeExcel(Class<T> clazz, List<T> dataModels,
-            String[] fieldNames, String[] titles) throws Exception;
- 
+                                        String[] fieldNames, String[] titles) throws Exception;
+
     /**
      * 判断属性是否为日期类型
-     * 
-     * @param clazz
-     *            数据类型
-     * @param fieldName
-     *            属性名
+     *
+     * @param clazz     数据类型
+     * @param fieldName 属性名
      * @return 如果为日期类型返回true，否则返回false
      */
     protected <T> boolean isDateType(Class<T> clazz, String fieldName) {
@@ -149,14 +126,12 @@ public abstract class ExcelHelper {
         }
         return flag;
     }
- 
+
     /**
      * 根据类型将指定参数转换成对应的类型
-     * 
-     * @param value
-     *            指定参数
-     * @param type
-     *            指定类型
+     *
+     * @param value 指定参数
+     * @param type  指定类型
      * @return 返回类型转换后的对象
      */
     protected <T> Object parseValueWithType(String value, Class<?> type) {
@@ -184,7 +159,7 @@ public abstract class ExcelHelper {
         }
         return result;
     }
- 
+
     public static void main(String[] args) {
         List<Employee> employees = new ArrayList<Employee>();
         employees.add(new Employee(1000, "Jones", 40, "Manager", 2975));
@@ -234,10 +209,9 @@ public abstract class ExcelHelper {
     }
 
 
+    public abstract String checkExcel(String[] fieldNames, boolean hasTitle)
+            throws Exception;
 
-	public abstract String checkExcel(String[] fieldNames, boolean hasTitle)
-			throws Exception ;
-
-	public abstract String excelToJson(String[] fieldNames, boolean hasTitle)
-			throws Exception ;
+    public abstract String excelToJson(String[] fieldNames, boolean hasTitle)
+            throws Exception;
 }

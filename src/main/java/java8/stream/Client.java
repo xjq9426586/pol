@@ -27,25 +27,26 @@ public class Client {
     public static List<String> filterDishName() {
         List<String> dishNames =
                 menu.stream()                               // 获取流
-                .filter(dish -> dish.getCalories() > 300)   // 筛选大于300
-                .map(Dish::getName)                         // 获取菜名
-                .limit(3)                                   // 取三位
-                .collect(Collectors.toList());              // 终端转换为列表
+                        .filter(dish -> dish.getCalories() > 300)   // 筛选大于300
+                        .map(Dish::getName)                         // 获取菜名
+                        .limit(3)                                   // 取三位
+                        .collect(Collectors.toList());              // 终端转换为列表
         return dishNames;
     }
-    public static void countByList(List<Dish> list){
+
+    public static void countByList(List<Dish> list) {
         Map<String, List<Dish>> map = list.stream().collect(Collectors.groupingBy(Dish::getName));
         System.out.println(map);
-        map.forEach((k,v) -> System.out.println("key=" + k + ",value=" + v));
+        map.forEach((k, v) -> System.out.println("key=" + k + ",value=" + v));
     }
-    public static void main(String[] args){
+
+    public static void main(String[] args) {
         countByList(menu);
         filterDishName().forEach(System.out::println);
 
         String[] arrays = {"hello", "world"};
         List<String> list = Arrays.stream(arrays)
-                .map(word -> word.split(""))        // 转换成字母数组
-                .flatMap(Arrays::stream)            // 将两个数组流合成一个数组流
+                .flatMap(word -> Arrays.stream(word.split("")))            // 将两个数组流合成一个数组流
                 .distinct()                         // 取唯一
                 .collect(Collectors.toList());
         list.forEach(System.out::print);

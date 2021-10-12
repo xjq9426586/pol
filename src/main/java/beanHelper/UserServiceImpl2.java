@@ -8,7 +8,7 @@ import annotation.Bean;
  * @Description:
  */
 @Bean
-public class UserServiceImpl2{
+public class UserServiceImpl2 {
 
     public void test() {
 

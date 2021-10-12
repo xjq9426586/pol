@@ -75,21 +75,23 @@ public class XWPFUtils {
         }
         return imageBundleList;
     }
-    public static void byteToFile(byte[] bytes, String path){
-        try{
+
+    public static void byteToFile(byte[] bytes, String path) {
+        try {
             // 根据绝对路径初始化文件
             File localFile = new File(path);
-            if (!localFile.exists()){
+            if (!localFile.exists()) {
                 localFile.createNewFile();
             }
             // 输出流
             OutputStream os = new FileOutputStream(localFile);
             os.write(bytes);
             os.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     public static void main(String[] args) throws IOException, InvalidFormatException {
         InputStream in = new FileInputStream("C:\\Users\\Administrator\\Desktop\\123.docx");
         CustomXWPFDocument xwpfDocument = new CustomXWPFDocument(in);
@@ -107,10 +109,10 @@ public class XWPFUtils {
         }*/
         List<XWPFParagraph> paragraphList = xwpfDocument.getParagraphs();
         for (XWPFParagraph xwpfParagraph : paragraphList) {
-            List<CTBookmark>  bookmarkList = xwpfParagraph.getCTP().getBookmarkStartList();
+            List<CTBookmark> bookmarkList = xwpfParagraph.getCTP().getBookmarkStartList();
             //循环加入标签
             for (CTBookmark bookmark : bookmarkList) {
-                if(bookmark.getName().equals("a")){
+                if (bookmark.getName().equals("a")) {
                     File file = new File("C:/Users/Administrator/Desktop/123.png");
                     InputStream inputStream = new FileInputStream(file);
                     XWPFRun xwpfRun = xwpfParagraph.createRun();

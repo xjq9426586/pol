@@ -13,7 +13,7 @@ public class UserApiImpl {
     @Inject
     private UserService userService;
 
-    public void test(){
+    public void test() {
         userService.test();
     }
 }

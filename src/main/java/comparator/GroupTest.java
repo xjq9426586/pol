@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 
 public class GroupTest {
     class Apple {
-    public String color;
-    public Integer weight;
+        public String color;
+        public Integer weight;
 
         public String getColor() {
             return color;
@@ -25,18 +25,20 @@ public class GroupTest {
         }
 
         public Apple(String color, int weight) {
-        super();
-        this.color = color;
-        this.weight = weight;
+            super();
+            this.color = color;
+            this.weight = weight;
+        }
+
+        @Override
+        public String toString() {
+            return "{color=" + color + ", weight=" + weight + "}";
+        }
     }
 
-    @Override
-    public String toString() {
-        return "{color=" + color + ", weight=" + weight + "}";
-    }
-    }
     /**
      * 按条件分组
+     *
      * @param datas
      * @param c
      * @return
@@ -60,6 +62,7 @@ public class GroupTest {
         }
         return result;
     }
+
     public static void main(String[] args) {
         List<Apple> list = new ArrayList<>();
 
@@ -69,8 +72,8 @@ public class GroupTest {
         list.add(new GroupTest().new Apple("绿", 153));
         list.add(new GroupTest().new Apple("黄", 119));
         list.add(new GroupTest().new Apple("黄", 224));
-        Map<String,List<Apple>> groupByMap = list.stream().collect(Collectors.groupingBy(Apple::getColor));
-        groupByMap.forEach((k,v) -> System.out.println(k+"," + v));
+        Map<String, List<Apple>> groupByMap = list.stream().collect(Collectors.groupingBy(Apple::getColor));
+        groupByMap.forEach((k, v) -> System.out.println(k + "," + v));
         list.sort(Comparator.comparing(Apple::getWeight));
         System.out.println(list);
         List<List<Apple>> byColors = divider(list, new Comparator<Apple>() {
@@ -94,9 +97,7 @@ public class GroupTest {
         System.out.println("按重量级分组" + byWeight);
 
 
-
-
-        Collections.sort(list, new Comparator<Apple>(){
+        Collections.sort(list, new Comparator<Apple>() {
 
             @Override
             public int compare(Apple o1, Apple o2) {
@@ -105,7 +106,7 @@ public class GroupTest {
             }
 
         });
-        System.out.println("按重量级比较"+list);
+        System.out.println("按重量级比较" + list);
 
     }
 

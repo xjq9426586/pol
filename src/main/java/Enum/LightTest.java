@@ -19,7 +19,7 @@ public class LightTest {
 
         // 构造函数，枚举类型只能为私有
 
-        private Light(int _nCode) {
+        Light(int _nCode) {
 
             this.nCode = _nCode;
 
@@ -35,14 +35,13 @@ public class LightTest {
     }
 
     /**
-     * 
      * @param args
      */
 
     public static void main(String[] args) {
 
         // 1.遍历枚举类型
-    	System.out.println(Light.YELLOW);
+        System.out.println(Light.YELLOW);
         System.out.println("演示枚举类型的遍历 ......");
 
         testTraversalEnum();
@@ -62,12 +61,11 @@ public class LightTest {
     }
 
     /**
-     * 
      * 演示枚举类型的遍历
      */
 
     private static void testTraversalEnum() {
-    	
+
         Light[] allLight = Light.values();
 
         for (Light aLight : allLight) {
@@ -84,7 +82,6 @@ public class LightTest {
     }
 
     /**
-     * 
      * 演示EnumMap的使用，EnumMap跟HashMap的使用差不多，只不过key要是枚举类型
      */
 
@@ -94,7 +91,7 @@ public class LightTest {
 
         EnumMap<Light, String> currEnumMap = new EnumMap<Light, String>(
 
-        Light.class);
+                Light.class);
 
         currEnumMap.put(Light.RED, "红灯");
 
@@ -108,16 +105,15 @@ public class LightTest {
 
             System.out.println("[key=" + aLight.name() + ",value="
 
-            + currEnumMap.get(aLight) + "]");
+                    + currEnumMap.get(aLight) + "]");
 
         }
 
     }
 
     /**
-     * 
      * 演示EnumSet如何使用，EnumSet是一个抽象类，获取一个类型的枚举类型内容<BR/>
-     * 
+     * <p>
      * 可以使用allOf方法
      */
 

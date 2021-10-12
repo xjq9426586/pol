@@ -39,7 +39,9 @@ public class MSWordTool {
     public static final String IMG_NAME = "imgName";
     public static final String IMG_DATA = "imgData";
     public static final String IMG_RID = "imgRid";
-    /** 内部使用的文档对象 **/
+    /**
+     * 内部使用的文档对象
+     **/
     private XWPFDocument document;
 
     private BookMarks bookMarks = null;
@@ -53,7 +55,8 @@ public class MSWordTool {
 
     /**
      * 为文档设置模板
-     * @param templatePath  模板文件名称
+     *
+     * @param templatePath 模板文件名称
      */
     public void setTemplate(String templatePath) {
         try {
@@ -70,9 +73,10 @@ public class MSWordTool {
 
     /**
      * 书签位置填充值,传入的Map中，key表示标签名称，value是替换的信息
+     *
      * @param indicator
      */
-    public void  replaceBookMark(Map<String,String> indicator) {
+    public void replaceBookMark(Map<String, String> indicator) {
         //循环进行替换
         Iterator<String> bookMarkIter = bookMarks.getNameIterator();
         while (bookMarkIter.hasNext()) {
@@ -80,12 +84,12 @@ public class MSWordTool {
 
             //得到标签名称
             BookMark bookMark = bookMarks.getBookmark(bookMarkName);
-            if(config != null && (boolean)config.get(MSWordTool.IS_REPLACE)){
+            if (config != null && (boolean) config.get(MSWordTool.IS_REPLACE)) {
                 bookMarkName = resetBookMarkName(bookMark, bookMarkName);
             }
 
             //进行替换
-            if (indicator.get(bookMarkName)!=null) {
+            if (indicator.get(bookMarkName) != null) {
                 bookMark.insertTextAtBookMark(indicator.get(bookMarkName), BookMark.INSERT_BEFORE);
             }
 
@@ -95,10 +99,11 @@ public class MSWordTool {
 
     /**
      * 表格数据填充
+     *
      * @param bookMarkName
      * @param content
      */
-    public void fillTableAtBookMark(String bookMarkName,List<Map<String,String>> content, List<CellRange> crs) {
+    public void fillTableAtBookMark(String bookMarkName, List<Map<String, String>> content, List<CellRange> crs) {
 
         //rowNum来比较标签在表格的哪一行
         int rowNum = 0;
@@ -109,16 +114,16 @@ public class MSWordTool {
         Map<String, Node> styleNode = new HashMap<String, Node>();
         Map<String, CTTcPr> tcPrMap = new HashMap<>();//保存单元格样式
         //标签是否处于表格内
-        if(bookMark.isInTable()){
+        if (bookMark.isInTable()) {
 
             //获得标签对应的Table对象和Row对象
             XWPFTable table = bookMark.getContainerTable();
             XWPFTableRow row = bookMark.getContainerTableRow();
             CTRow ctRow = row.getCtRow();
             List<XWPFTableCell> rowCell = row.getTableCells();
-            for(int i = 0; i < rowCell.size(); i++){
+            for (int i = 0; i < rowCell.size(); i++) {
                 //获取单元格标签
-                columnMap.put(i+"", rowCell.get(i).getText().trim());
+                columnMap.put(i + "", rowCell.get(i).getText().trim());
                 //System.out.println(rowCell.get(i).getParagraphs().get(0).createRun().getFontSize());
                 //System.out.println(rowCell.get(i).getParagraphs().get(0).getCTP());
                 //System.out.println(rowCell.get(i).getParagraphs().get(0).getStyle());
@@ -127,17 +132,17 @@ public class MSWordTool {
                 //获取该单元格段落的xml，得到根节点
                 Node node1 = rowCell.get(i).getParagraphs().get(0).getCTP().getDomNode();
                 //遍历根节点的所有子节点
-                for (int x=0;x<node1.getChildNodes().getLength();x++) {
+                for (int x = 0; x < node1.getChildNodes().getLength(); x++) {
                     //System.out.println(node1.getChildNodes().item(x).getNodeName());
                     if (node1.getChildNodes().item(x).getNodeName().equals(BookMark.RUN_NODE_NAME)) {
                         Node node2 = node1.getChildNodes().item(x);
 
                         //遍历所有节点为"w:r"的所有自己点，找到节点名为"w:rPr"的节点
-                        for (int y=0;y<node2.getChildNodes().getLength();y++) {
-                            if(node2.getChildNodes().item(y).getNodeName().endsWith(BookMark.STYLE_NODE_NAME)){
+                        for (int y = 0; y < node2.getChildNodes().getLength(); y++) {
+                            if (node2.getChildNodes().item(y).getNodeName().endsWith(BookMark.STYLE_NODE_NAME)) {
 
                                 //将节点为"w:rPr"的节点(字体格式)存到HashMap中
-                                styleNode.put(i+"", node2.getChildNodes().item(y));
+                                styleNode.put(i + "", node2.getChildNodes().item(y));
                             }
                         }
                     } else {
@@ -147,15 +152,15 @@ public class MSWordTool {
             }
 
             //循环对比，找到该行所处的位置，删除改行
-            for(int i = 0; i < table.getNumberOfRows(); i++){
-                if(table.getRow(i).equals(row)){
+            for (int i = 0; i < table.getNumberOfRows(); i++) {
+                if (table.getRow(i).equals(row)) {
                     rowNum = i;
                     break;
                 }
             }
             table.removeRow(rowNum);
 
-            for(int i = 0; i < content.size(); i++){
+            for (int i = 0; i < content.size(); i++) {
                 //创建新的一行,单元格数是表的第一行的单元格数,
                 //后面添加数据时，要判断单元格数是否一致
                 XWPFTableRow tableRow = table.createRow();
@@ -163,48 +168,49 @@ public class MSWordTool {
 
             //得到表格行数
             int rcount = table.getNumberOfRows();
-            for(int i = rowNum; i < rcount; i++){
+            for (int i = rowNum; i < rcount; i++) {
                 XWPFTableRow newRow = table.getRow(i);
 
                 //判断newRow的单元格数是不是该书签所在行的单元格数
-                if(newRow.getTableCells().size() != rowCell.size()){
+                if (newRow.getTableCells().size() != rowCell.size()) {
 
                     //计算newRow和书签所在行单元格数差的绝对值
                     //如果newRow的单元格数多于书签所在行的单元格数，不能通过此方法来处理，可以通过表格中文本的替换来完成
                     //如果newRow的单元格数少于书签所在行的单元格数，要将少的单元格补上
-                    int sub= Math.abs(newRow.getTableCells().size() - rowCell.size());
+                    int sub = Math.abs(newRow.getTableCells().size() - rowCell.size());
                     //将缺少的单元格补上
-                    for(int j = 0;j < sub; j++){
+                    for (int j = 0; j < sub; j++) {
                         newRow.addNewTableCell();
                     }
                 }
 
                 List<XWPFTableCell> cells = newRow.getTableCells();
 
-                for(int j = 0; j < cells.size(); j++){
+                for (int j = 0; j < cells.size(); j++) {
                     XWPFParagraph para = cells.get(j).getParagraphs().get(0);
                     XWPFRun run = para.createRun();
                     CTTc pa = cells.get(j).getCTTc();
                     pa.setTcPr(tcPrMap.get(String.valueOf(j)));//重新设置单元格样式
-                    if(content.get(i-rowNum).get(columnMap.get(j+"")) != null){
+                    if (content.get(i - rowNum).get(columnMap.get(j + "")) != null) {
 
                         //改变单元格的值，标题栏不用改变单元格的值
-                        run.setText(content.get(i-rowNum).get(columnMap.get(j+""))+"");
+                        run.setText(content.get(i - rowNum).get(columnMap.get(j + "")) + "");
 
                         //将单元格段落的字体格式设为原来单元格的字体格式
-                        run.getCTR().getDomNode().insertBefore(styleNode.get(j+"").cloneNode(true), run.getCTR().getDomNode().getFirstChild());
+                        run.getCTR().getDomNode().insertBefore(styleNode.get(j + "").cloneNode(true), run.getCTR().getDomNode().getFirstChild());
                     }
 
                     para.setAlignment(ParagraphAlignment.CENTER);
                 }
             }
-            if(CollectionUtils.isNotEmpty(crs)){
+            if (CollectionUtils.isNotEmpty(crs)) {
                 for (CellRange cr : crs) {
                     cr.mergeCells(table);
                 }
             }
         }
     }
+
     public void fillSpecailTableAtBookMark(String bookMarkName, List<Map<String, String>> content, List<CellRange> crs) {
 
         //rowNum来比较书签在表格的哪一行
@@ -216,7 +222,7 @@ public class MSWordTool {
         //存放每行的样式
         Map<String, Node> styleNode = new HashMap<String, Node>();
 
-        if(null == bookMark){
+        if (null == bookMark) {
             return;
         }
 
@@ -263,9 +269,9 @@ public class MSWordTool {
 
             XWPFTableRow sourceRow = table.getRow(rowNum);
 
-            if(CollectionUtil.isEmpty(content)){
+            if (CollectionUtil.isEmpty(content)) {
                 copy(table, sourceRow, rowNum + 1, new HashMap<>(), styleNode);
-            }else {
+            } else {
                 //根据传递的参数集合，rowNum坐标，来创建新行
                 for (int i = 0; i < content.size(); i++) {
                     //深拷贝一行，根据rowNum这一行拷贝，把content.get(i)这一行传递过去，在深拷贝的同时，给表格赋值
@@ -278,6 +284,7 @@ public class MSWordTool {
             table.removeRow(rowNum);
         }
     }
+
     public void copy(XWPFTable table, XWPFTableRow sourceRow, int rowIndex, Map<String, String> map, Map<String, Node> styleNode) {
         //在表格指定位置新增一行
         XWPFTableRow targetRow = table.insertNewTableRow(rowIndex);
@@ -328,10 +335,11 @@ public class MSWordTool {
 
     /**
      * 通过标签填充值
+     *
      * @param bookmarkMap
      * @param bookMarkName
      */
-    public void replaceText(Map<String,String> bookmarkMap, String bookMarkName) {
+    public void replaceText(Map<String, String> bookmarkMap, String bookMarkName) {
 
         //首先得到标签
         BookMark bookMark = bookMarks.getBookmark(bookMarkName);
@@ -340,17 +348,17 @@ public class MSWordTool {
         //获得所有的表
         //Iterator<XWPFTable> it = document.getTablesIterator();
 
-        if(table != null){
+        if (table != null) {
             //得到该表的所有行
             int rcount = table.getNumberOfRows();
-            for(int i = 0 ;i < rcount; i++){
+            for (int i = 0; i < rcount; i++) {
                 XWPFTableRow row = table.getRow(i);
 
                 //获到改行的所有单元格
                 List<XWPFTableCell> cells = row.getTableCells();
-                for(XWPFTableCell c : cells){
-                    for(Entry<String,String> e : bookmarkMap.entrySet()){
-                        if(c.getText().equals(e.getKey())){
+                for (XWPFTableCell c : cells) {
+                    for (Entry<String, String> e : bookmarkMap.entrySet()) {
+                        if (c.getText().equals(e.getKey())) {
 
                             //删掉单元格内容
                             c.removeParagraph(0);
@@ -368,7 +376,7 @@ public class MSWordTool {
         Iterator<String> bookMarkIter = bookMarks.getNameIterator();
         while (bookMarkIter.hasNext()) {
             String bookMarkName = bookMarkIter.next();
-            if(data.get(bookMarkName) != null){
+            if (data.get(bookMarkName) != null) {
                 BookMark bookMark = bookMarks.getBookmark(bookMarkName);
                 XWPFRun xwpfRun = bookMark.getPara().createRun();
                 XWPFPicture xwpfPicture = xwpfRun.addPicture((InputStream) data.get(bookMarkName),
@@ -378,6 +386,7 @@ public class MSWordTool {
             }
         }
     }
+
     public void createPicture(String id, int width, int height, XWPFRun xwpfRun) {
         final int EMU = 9525;
         width *= EMU;
@@ -438,13 +447,14 @@ public class MSWordTool {
         docPr.setName("图片" + id);
         docPr.setDescr("甩葱玩具");
     }
-    public Map<String, Object> getPic(){
+
+    public Map<String, Object> getPic() {
         List<Map<String, Object>> imageBundleList = new ArrayList<>();
         Map<String, Object> reMap = new HashMap<>();
         Iterator<String> bookMarkIter = bookMarks.getNameIterator();
         while (bookMarkIter.hasNext()) {
             String bookMarkName = bookMarkIter.next();
-            if(bookMarkName.indexOf("tableCell") != -1){
+            if (bookMarkName.indexOf("tableCell") != -1) {
                 BookMark bookMark = bookMarks.getBookmark(bookMarkName);
                 XWPFParagraph xwpfParagraph = bookMark.getPara();
                 List<XWPFRun> runList = xwpfParagraph.getRuns();
@@ -507,6 +517,7 @@ public class MSWordTool {
             e.printStackTrace();
         }
     }
+
     public void saveAs(String path) {
         File newFile = new File(path);
         FileOutputStream fos = null;
@@ -523,12 +534,13 @@ public class MSWordTool {
             e.printStackTrace();
         }
     }
-    private String resetBookMarkName(BookMark bookMark, String bookMarkName){
+
+    private String resetBookMarkName(BookMark bookMark, String bookMarkName) {
         String[] replaceKeys = (String[]) config.get(MSWordTool.REPLACE_KEYS);
         String replaceFlag = (String) config.get(MSWordTool.REPLACE_FLAG);
-        if(replaceKeys != null){
+        if (replaceKeys != null) {
             for (String replaceKey : replaceKeys) {
-                if(bookMarkName.indexOf(replaceKey) > -1){
+                if (bookMarkName.indexOf(replaceKey) > -1) {
                     XWPFParagraph xwpfParagraph = bookMark.getPara();
                     CTBookmark ctBookmark = xwpfParagraph.getCTP().getBookmarkStartList().get(0);
                     bookMarkName = bookMarkName + "_" + replaceFlag;

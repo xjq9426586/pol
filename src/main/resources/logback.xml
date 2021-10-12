@@ -1,11 +1,11 @@
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
     <!-- 动态日志级别 -->
-    <jmxConfigurator />
+    <jmxConfigurator/>
     <!-- 定义日志文件 输出位置 -->
     <!-- <property name="log_dir" value="C:/MapFilter" />-->
-    <property name="log_dir" value="D:/logs" />
+    <property name="log_dir" value="D:/logs"/>
     <!-- 日志最大的历史 30天 -->
-    <property name="maxHistory" value="90" />
+    <property name="maxHistory" value="90"/>
 
     <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%p] - %m%n"/>
 
@@ -30,10 +30,9 @@
     </appender>
 
 
-
     <root>
-        <level value="debug" />
-        <appender-ref ref="console" />
-         <appender-ref ref="pol"/>
+        <level value="debug"/>
+        <appender-ref ref="console"/>
+        <appender-ref ref="pol"/>
     </root>
 </configuration>

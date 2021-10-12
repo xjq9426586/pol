@@ -30,36 +30,36 @@ public class Read {
             List<String> list = new ArrayList<>();
             c.forEach(e -> {
 
-                if(e.indexOf("-api") != -1){
+                if (e.indexOf("-api") != -1) {
                     String str = e.substring(0, e.indexOf("-api") + 4).trim();
                     sb.setLength(0);
-                    if(e.contains("-usecredit")){
+                    if (e.contains("-usecredit")) {
                         sb.append(str, 0, str.indexOf("-usecredit") + 10);
                         sb.append("/");
                         sb.append(str, 0, str.indexOf("-api"));
-                    }else{
+                    } else {
                         sb.append(str, 0, str.indexOf("-api"));
                     }
                     sb.append("/");
                     sb.append(str);
                     sb.append("/src/main/java/");
                     //System.out.println(e.substring(0, e.indexOf("-api") + 4).trim());
-                }else if(e.indexOf(".api") != -1){
+                } else if (e.indexOf(".api") != -1) {
                     String str = e.substring(0, e.indexOf(".api") + 4).trim();
-                    if(sb.indexOf("com.") != -1){
-                        if(sb.lastIndexOf(".java") != -1){
+                    if (sb.indexOf("com.") != -1) {
+                        if (sb.lastIndexOf(".java") != -1) {
                             sb.delete(sb.indexOf("com."), sb.lastIndexOf(".java") + 5);
-                        }else{
+                        } else {
                             sb.delete(sb.indexOf("com."), sb.lastIndexOf(".api") + 4);
                         }
                     }
                     sb.append(str);
                     //System.out.println(e.substring(0, e.indexOf(".api") + 4).trim());
-                }else if(e.indexOf(".java") != -1){
-                    if(sb.indexOf(".api") != -1){
+                } else if (e.indexOf(".java") != -1) {
+                    if (sb.indexOf(".api") != -1) {
                         String str = e.substring(0, e.indexOf(".java") + 5).trim();
                         try {
-                            if(sb.lastIndexOf(".java") != -1){
+                            if (sb.lastIndexOf(".java") != -1) {
                                 sb.delete(sb.indexOf(".api") + 4, sb.lastIndexOf(".java") + 5);
                             }
                         } catch (Exception ex) {
@@ -71,17 +71,17 @@ public class Read {
                         list.add(sb.toString().replace(".java", "*java")
                                 .replaceAll("\\.", "/").replace("*java", ".java"));
                     }
-                   // System.out.println(e.substring(0, e.indexOf(".java") + 5).trim());
+                    // System.out.println(e.substring(0, e.indexOf(".java") + 5).trim());
                 }
             });
             list.forEach(e -> {
-                if(!e.contains("-retail")){
+                if (!e.contains("-retail")) {
                     String path = e;
                     String tempPath = path.substring(path.indexOf("/com") + 1, path.lastIndexOf(".java") + 5);
                     //先创建复制文件夹
                     String tempDesPath = desPath + tempPath.substring(0, tempPath.lastIndexOf("/"));
                     File desFilePath = new File(tempDesPath);
-                    if(!desFilePath.exists()){
+                    if (!desFilePath.exists()) {
                         desFilePath.mkdirs();
                     }
                     //idea 源代码路径
@@ -123,9 +123,9 @@ public class Read {
                 outBuff.write(b, 0, len);
             }
             outBuff.flush();
-        } catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
-        }finally {
+        } finally {
             if (inBuff != null)
                 inBuff.close();
             if (outBuff != null)

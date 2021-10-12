@@ -22,12 +22,15 @@ public class XmlUtil {
         }
         return null;
     }
+
     public static Map<String, Object> xmlToMap(byte[] fileData) {
         return xmlToMap(new ByteArrayInputStream(fileData));
     }
+
     public static Map<String, Object> xmlToMap(String filePath) {
         return xmlToMap(new File(filePath));
     }
+
     public static Map<String, Object> xmlToMap(File file) {
         try {
             return xmlToMap(new FileInputStream(file));
@@ -36,23 +39,23 @@ public class XmlUtil {
         }
         return null;
     }
+
     /**
-     *
+     * @return java.util.Map<java.lang.String, java.lang.Object>
      * @Author xujunqian
      * @Description 解析xml转换成map
      * @Date 2019/11/25 0025
      * @Param [is]输入流
-     * @return java.util.Map<java.lang.String,java.lang.Object>
-    **/
+     **/
     public static Map<String, Object> xmlToMap(InputStream is) {
         Map<String, Object> map = new HashMap<>();
         //创建DOM4J解析器对象
         SAXReader saxReader = new SAXReader();
         try {
-            if(is.available() > 0){
+            if (is.available() > 0) {
                 //读取xml文件，并生成document对象
                 Document document = saxReader.read(is);
-                if (document != null){
+                if (document != null) {
                     Element root = document.getRootElement();
                     convert1(root, map);
                 }
@@ -63,28 +66,29 @@ public class XmlUtil {
         }
         return map;
     }
-    public static Map convert(Element e, Map<String, Object> map){
+
+    public static Map convert(Element e, Map<String, Object> map) {
         String key = e.getName();
         List<Element> list = e.elements();
         List rList = new ArrayList();
-        if(map.get(key) instanceof ArrayList){
+        if (map.get(key) instanceof ArrayList) {
             rList = (List) map.get(key);
-        }else{
+        } else {
             rList.add(map.get(key));
         }
-        if(list.size() == 0){//无子节点
-            if(map.containsKey(key)){
+        if (list.size() == 0) {//无子节点
+            if (map.containsKey(key)) {
                 rList.add(e.getText());
                 map.put(key, rList);
-            }else{
+            } else {
                 map.put(key, e.getText());
             }
-        }else{
+        } else {
             Map<String, Object> newMap = new HashMap<>();
-            if(map.containsKey(key)){
+            if (map.containsKey(key)) {
                 rList.add(convert(e, newMap).get(key));
                 map.put(key, rList);
-            }else{
+            } else {
                 for (Element element : list) {
                     map.put(key, convert(element, newMap));
                 }
@@ -93,36 +97,36 @@ public class XmlUtil {
         return map;
     }
 
-    public static Map convert1(Element e, Map<String, Object> map){
+    public static Map convert1(Element e, Map<String, Object> map) {
         String key = e.getName();
         List<Element> list = e.elements();
         /**
          * 判断是否已存在相同节点，若存在则判断是否存在则用list来存节点
          */
-        if(map.containsKey(key)){
+        if (map.containsKey(key)) {
             List rList;
             Object o;
             /**
              * 存在两个以上相同节点名只需取出list不需new
              */
-            if(map.get(key) instanceof ArrayList){
+            if (map.get(key) instanceof ArrayList) {
                 rList = (List) map.get(key);
-            }else{
+            } else {
                 rList = new ArrayList();
                 rList.add(map.get(key));
             }
-            if(list.size() == 0){
+            if (list.size() == 0) {
                 o = e.getText();
-            }else{
+            } else {
                 Map<String, Object> newMap = new HashMap<>();
                 o = convert1(e, newMap).get(key);//递归获取节点信息
             }
             rList.add(o);
             map.put(key, rList);
-        }else{
-            if(list.size() == 0){
+        } else {
+            if (list.size() == 0) {
                 map.put(key, e.getText());
-            }else{
+            } else {
                 Map<String, Object> newMap = new HashMap<>();
                 for (Element element : list) {
                     map.put(key, convert(element, newMap));//递归节点
@@ -131,6 +135,7 @@ public class XmlUtil {
         }
         return map;
     }
+
     public static void main(String[] args) {
         System.out.println(xmlToMap("C:\\Users\\Administrator\\Desktop\\log4j2.xml"));
     }

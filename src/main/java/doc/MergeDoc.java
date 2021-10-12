@@ -19,7 +19,7 @@ import java.util.List;
  * @Description:
  */
 public class MergeDoc {
-    public static void main (String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
         List<String> paths = new ArrayList<>();
         paths.add("D:\\MapFilter.docx");
         paths.add("D:\\test1.docx");
@@ -28,7 +28,7 @@ public class MergeDoc {
     }
 
 
-    public static void mergeDocs(List<String> mergeDocPaths, String outPath){
+    public static void mergeDocs(List<String> mergeDocPaths, String outPath) {
         XWPFDocument doc = null;
         CTBody docBody = null;
         try {
@@ -36,10 +36,10 @@ public class MergeDoc {
             for (int i = 0; i < mergeDocPaths.size(); i++) {
                 InputStream in = new FileInputStream(mergeDocPaths.get(i));
                 OPCPackage srcPackage = OPCPackage.open(in);
-                if(i == 0){
+                if (i == 0) {
                     doc = new XWPFDocument(srcPackage);
                     docBody = doc.getDocument().getBody();
-                }else{
+                } else {
                     XWPFDocument appendDoc = new XWPFDocument(srcPackage);
                     CTBody appendBody = appendDoc.getDocument().getBody();
                     appendBody(docBody, appendBody);
@@ -56,11 +56,11 @@ public class MergeDoc {
         optionsOuter.setSaveOuter();
         String appendString = append.xmlText();
         String srcString = src.xmlText();
-        String prefix = srcString.substring(0,srcString.indexOf(">")+1);
-        String mainPart = srcString.substring(srcString.indexOf(">")+1,srcString.lastIndexOf("<"));
-        String sufix = srcString.substring( srcString.lastIndexOf("<") );
+        String prefix = srcString.substring(0, srcString.indexOf(">") + 1);
+        String mainPart = srcString.substring(srcString.indexOf(">") + 1, srcString.lastIndexOf("<"));
+        String sufix = srcString.substring(srcString.lastIndexOf("<"));
         String addPart = appendString.substring(appendString.indexOf(">") + 1, appendString.lastIndexOf("<"));
-        CTBody makeBody = CTBody.Factory.parse(prefix+mainPart+addPart+sufix);
+        CTBody makeBody = CTBody.Factory.parse(prefix + mainPart + addPart + sufix);
         src.set(makeBody);
     }
 }

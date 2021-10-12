@@ -19,17 +19,17 @@ import java.util.Map;
  */
 public class JxlsUtils {
 
-	public static void exportExcel(InputStream is, OutputStream os, Map<String, Object> model) throws IOException {
-		Context context = new Context();
-		if (model != null) {
-			for (String key : model.keySet()) {
-				context.putVar(key, model.get(key));
-			}
-		}
-		JxlsHelper jxlsHelper = JxlsHelper.getInstance();
-		Transformer transformer = jxlsHelper.createTransformer(is, os);
-		JexlExpressionEvaluator evaluator = (JexlExpressionEvaluator) transformer.getTransformationConfig()
-				.getExpressionEvaluator();
-		jxlsHelper.processTemplate(context, transformer);
-	}
+    public static void exportExcel(InputStream is, OutputStream os, Map<String, Object> model) throws IOException {
+        Context context = new Context();
+        if (model != null) {
+            for (String key : model.keySet()) {
+                context.putVar(key, model.get(key));
+            }
+        }
+        JxlsHelper jxlsHelper = JxlsHelper.getInstance();
+        Transformer transformer = jxlsHelper.createTransformer(is, os);
+        JexlExpressionEvaluator evaluator = (JexlExpressionEvaluator) transformer.getTransformationConfig()
+                .getExpressionEvaluator();
+        jxlsHelper.processTemplate(context, transformer);
+    }
 }

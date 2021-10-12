@@ -28,12 +28,12 @@ public class IoUtil {
             list.add(i);
         }
         List<Integer> temp;
-        int total = (list.size()-1)/10+1;
+        int total = (list.size() - 1) / 10 + 1;
         for (int i = 0; i < total; i++) {
-            if((i+1)*10 > list.size()){
-                temp = list.subList(i*10, list.size());
-            }else {
-                temp = list.subList(i*10, (i+1)*10);
+            if ((i + 1) * 10 > list.size()) {
+                temp = list.subList(i * 10, list.size());
+            } else {
+                temp = list.subList(i * 10, (i + 1) * 10);
             }
             System.out.println(temp);
         }
@@ -44,18 +44,19 @@ public class IoUtil {
         File f = File.createTempFile("temp", ".docx");
         FileUtils.deleteQuietly(new File(f.getPath()));
     }
+
     public static String getStringRandom(int length) {
         String val = "";
         Random random = new Random();
         //参数length，表示生成几位随机数
-        for(int i = 0; i < length; i++) {
+        for (int i = 0; i < length; i++) {
             String charOrNum = random.nextInt(2) % 2 == 0 ? "char" : "num";
             //输出字母还是数字
-            if("char".equalsIgnoreCase(charOrNum)){
+            if ("char".equalsIgnoreCase(charOrNum)) {
                 //输出是大写字母还是小写字母
                 int temp = random.nextInt(2) % 2 == 0 ? 65 : 97;
-                val += (char)(random.nextInt(26) + temp);
-            }else if("num".equalsIgnoreCase(charOrNum)) {
+                val += (char) (random.nextInt(26) + temp);
+            } else if ("num".equalsIgnoreCase(charOrNum)) {
                 val += String.valueOf(random.nextInt(10));
             }
         }

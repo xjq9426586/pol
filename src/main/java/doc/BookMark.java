@@ -15,12 +15,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- *
  * Word 文件中标签的封装类，保存了其定义和内部的操作
  *
- * @author
- *
- * <p>Modification History:</p>
+ * @author <p>Modification History:</p>
  * <p>Date       Author      Description</p>
  * <p>------------------------------------------------------------------</p>
  * <p> </p>
@@ -30,16 +27,24 @@ public class BookMark {
 
     //以下为定义的常量
 
-    /** 替换标签时，设于标签的后面   **/
+    /**
+     * 替换标签时，设于标签的后面
+     **/
     public static final int INSERT_AFTER = 0;
 
-    /** 替换标签时，设于标签的前面   **/
+    /**
+     * 替换标签时，设于标签的前面
+     **/
     public static final int INSERT_BEFORE = 1;
 
-    /** 替换标签时，将内容替换书签   **/
+    /**
+     * 替换标签时，将内容替换书签
+     **/
     public static final int REPLACE = 2;
 
-    /** docx中定义的部分常量引用  **/
+    /**
+     * docx中定义的部分常量引用
+     **/
     public static final String RUN_NODE_NAME = "w:r";
     public static final String TEXT_NODE_NAME = "w:t";
     public static final String BOOKMARK_START_TAG = "bookmarkStart";
@@ -47,23 +52,34 @@ public class BookMark {
     public static final String BOOKMARK_ID_ATTR_NAME = "w:id";
     public static final String STYLE_NODE_NAME = "w:rPr";
 
-    /** 内部的标签定义类  **/
+    /**
+     * 内部的标签定义类
+     **/
     private CTBookmark _ctBookmark = null;
 
-    /** 标签所处的段落  **/
+    /**
+     * 标签所处的段落
+     **/
     private XWPFParagraph _para = null;
 
-    /** 标签所在的表cell对象  **/
+    /**
+     * 标签所在的表cell对象
+     **/
     private XWPFTableCell _tableCell = null;
 
-    /** 标签名称 **/
+    /**
+     * 标签名称
+     **/
     private String _bookmarkName = null;
 
-    /** 该标签是否处于表格内  **/
+    /**
+     * 该标签是否处于表格内
+     **/
     private boolean _isCell = false;
 
     /**
      * 构造函数
+     *
      * @param ctBookmark
      * @param para
      */
@@ -77,6 +93,7 @@ public class BookMark {
 
     /**
      * 构造函数，用于表格中的标签
+     *
      * @param ctBookmark
      * @param para
      * @param tableCell
@@ -100,7 +117,7 @@ public class BookMark {
     }
 
     public String getBookmarkName() {
-        return  this._bookmarkName;
+        return this._bookmarkName;
     }
 
     /**
@@ -108,20 +125,20 @@ public class BookMark {
      * bookmark.
      *
      * @param bookmarkValue An instance of the String class that encapsulates
-     * the text to insert into the document.
-     * @param where A primitive int whose value indicates where the text ought
-     * to be inserted. There are three options controlled by constants; insert
-     * the text immediately in front of the bookmark (Bookmark.INSERT_BEFORE),
-     * insert text immediately after the bookmark (Bookmark.INSERT_AFTER) and
-     * replace any and all text that appears between the bookmark's square
-     * brackets (Bookmark.REPLACE).
+     *                      the text to insert into the document.
+     * @param where         A primitive int whose value indicates where the text ought
+     *                      to be inserted. There are three options controlled by constants; insert
+     *                      the text immediately in front of the bookmark (Bookmark.INSERT_BEFORE),
+     *                      insert text immediately after the bookmark (Bookmark.INSERT_AFTER) and
+     *                      replace any and all text that appears between the bookmark's square
+     *                      brackets (Bookmark.REPLACE).
      */
     public void insertTextAtBookMark(String bookmarkValue, int where) {
 
         //普通标签，直接创建一个元素
         XWPFRun run = this._para.createRun();
         run.setText(bookmarkValue);
-        switch(where) {
+        switch (where) {
             case BookMark.INSERT_AFTER:
                 this.insertAfterBookmark(run);
                 break;
@@ -137,7 +154,7 @@ public class BookMark {
     /**
      * Inserts some text into a Word document in a position that is immediately
      * after a named bookmark.
-     *
+     * <p>
      * Bookmarks can take two forms, they can either simply mark a location
      * within a document or they can do this but contain some text. The
      * difference is obvious from looking at some XML markup. The simple
@@ -148,13 +165,13 @@ public class BookMark {
      * <w:bookmarkStart w:name="AllAlone" w:id="0"/><w:bookmarkEnd w:id="0"/>
      *
      * </pre>
-     *
+     * <p>
      * Simply a pair of tags where one tag has the name bookmarkStart, the other
      * the name bookmarkEnd and both share matching id attributes. In this case,
      * the text will simply be inserted into the document at a point immediately
      * after the bookmarkEnd tag. No styling will be applied to the text, it
      * will simply inherit the documents defaults.
-     *
+     * <p>
      * The more complex case looks like this;
      *
      * <pre>
@@ -170,13 +187,13 @@ public class BookMark {
      * <w:bookmarkEnd w:id="3"/>
      *
      * </pre>
-     *
+     * <p>
      * Here, the user has selected the word 'text' and chosen to insert a
      * bookmark into the document at that point. So, the bookmark tags 'contain'
      * a character run that is styled. Inserting any text after this bookmark,
      * it is important to ensure that the styling is preserved and copied over
      * to the newly inserted text.
-     *
+     * <p>
      * The approach taken to dealing with both cases is similar but slightly
      * different. In both cases, the code simply steps along the document nodes
      * until it finds the bookmarkEnd tag whose ID matches that of the
@@ -185,7 +202,7 @@ public class BookMark {
      * the paragraph immediately in front of this node. If, on the other hand,
      * there are no more nodes following the bookmarkEnd tag, then the new run
      * will simply be positioned at the end of the paragraph.
-     *
+     * <p>
      * Styles are dealt with by 'looking' for a 'w:rPr' element whilst iterating
      * through the nodes. If one is found, its details will be captured and
      * applied to the run before the run is inserted into the paragraph. If
@@ -195,7 +212,7 @@ public class BookMark {
      * applied to the newly inserted text.
      *
      * @param run An instance of the XWPFRun class that encapsulates the text
-     * that is to be inserted into the document following the bookmark.
+     *            that is to be inserted into the document following the bookmark.
      */
     private void insertAfterBookmark(XWPFRun run) {
         Node nextNode = null;
@@ -268,7 +285,7 @@ public class BookMark {
     /**
      * Inserts some text into a Word document immediately in front of the
      * location of a bookmark.
-     *
+     * <p>
      * This case is slightly more straightforward than inserting after the
      * bookmark. For example, it is possible only to insert a new node in front
      * of an existing node. When inserting after the bookmark, then end node had
@@ -280,7 +297,7 @@ public class BookMark {
      * paragraph.
      *
      * @param run An instance of the XWPFRun class that encapsulates the text
-     * that is to be inserted into the document following the bookmark.
+     *            that is to be inserted into the document following the bookmark.
      */
     private void insertBeforeBookmark(XWPFRun run) {
         Node insertBeforeNode = null;
@@ -324,7 +341,7 @@ public class BookMark {
      * and bookmarkEnd tags.
      *
      * @param run An instance of the XWPFRun class that encapsulates the text
-     * that is to be inserted into the document following the bookmark.
+     *            that is to be inserted into the document following the bookmark.
      */
     private void replaceBookmark(XWPFRun run) {
         Node nextNode = null;
@@ -408,8 +425,8 @@ public class BookMark {
      * where one bookmark overlaps another in the markup. That is still to do.
      *
      * @param nodeStack An instance of the Stack class that encapsulates
-     * references to any and all nodes found between the opening and closing
-     * tags of a bookmark.
+     *                  references to any and all nodes found between the opening and closing
+     *                  tags of a bookmark.
      */
     private void deleteChildNodes(Stack<Node> nodeStack) {
         Node toDelete = null;
@@ -419,26 +436,24 @@ public class BookMark {
 
         // The first element in the list will be a bookmarkStart tag and that
         // must not be deleted.
-        for(int i = 1; i < nodeStack.size(); i++) {
+        for (int i = 1; i < nodeStack.size(); i++) {
 
             // Get an element. If it is another bookmarkStart tag then
             // again, we do not want to delete it, it's matching end tag
             // or any nodes that fall inbetween.
             toDelete = nodeStack.elementAt(i);
-            if(toDelete.getNodeName().contains(BookMark.BOOKMARK_START_TAG)) {
+            if (toDelete.getNodeName().contains(BookMark.BOOKMARK_START_TAG)) {
                 bookmarkStartID = Integer.parseInt(
                         toDelete.getAttributes().getNamedItem(BookMark.BOOKMARK_ID_ATTR_NAME).getNodeValue());
                 inNestedBookmark = true;
-            }
-            else if(toDelete.getNodeName().contains(BookMark.BOOKMARK_END_TAG)) {
+            } else if (toDelete.getNodeName().contains(BookMark.BOOKMARK_END_TAG)) {
                 bookmarkEndID = Integer.parseInt(
                         toDelete.getAttributes().getNamedItem(BookMark.BOOKMARK_ID_ATTR_NAME).getNodeValue());
-                if(bookmarkEndID == bookmarkStartID) {
+                if (bookmarkEndID == bookmarkStartID) {
                     inNestedBookmark = false;
                 }
-            }
-            else {
-                if(!inNestedBookmark) {
+            } else {
+                if (!inNestedBookmark) {
                     this._para.getCTP().getDomNode().removeChild(toDelete);
                 }
             }
@@ -454,7 +469,7 @@ public class BookMark {
      * null if it does not find a style making that checking process easier.
      *
      * @param parentNode An instance of the Node class that encapsulates a
-     * reference to a document node.
+     *                   reference to a document node.
      * @return An instance of the Node class that encapsulates the styling
      * information applied to a character run. Note that if no styling
      * information is found in the run OR if the node passed as an argument to
@@ -511,20 +526,19 @@ public class BookMark {
      * appeared between the opening and closing square bracket associated with
      * this bookmark.
      * @throws XmlException Thrown if a problem is encountered parsing the XML
-     * markup recovered from the document in order to construct a CTText
-     * instance which may required to obtain the bookmarks text.
+     *                      markup recovered from the document in order to construct a CTText
+     *                      instance which may required to obtain the bookmarks text.
      */
     public String getBookmarkText() throws XmlException {
         StringBuilder builder = null;
         // Are we dealing with a bookmarked table cell? If so, the entire
         // contents of the cell - if anything - must be recovered and returned.
-        if(this._tableCell != null) {
+        if (this._tableCell != null) {
             builder = new StringBuilder(this._tableCell.getText());
-        }
-        else {
+        } else {
             builder = this.getTextFromBookmark();
         }
-        return(builder == null ? null : builder.toString());
+        return (builder == null ? null : builder.toString());
     }
 
     /**
@@ -533,7 +547,7 @@ public class BookMark {
      * instance, the creator of the document has selected some text and then
      * chosen to insert a bookmark there and the difference if obvious when
      * looking at the XML markup.
-     *
+     * <p>
      * The simple case;
      *
      * <pre>
@@ -541,7 +555,7 @@ public class BookMark {
      * <w:bookmarkStart w:name="AllAlone" w:id="0"/><w:bookmarkEnd w:id="0"/>
      *
      * </pre>
-     *
+     * <p>
      * The more complex case;
      *
      * <pre>
@@ -557,7 +571,7 @@ public class BookMark {
      * <w:bookmarkEnd w:id="3"/>
      *
      * </pre>
-     *
+     * <p>
      * This method assumes that the user wishes to recover the content from any
      * character run that appears in the markup between a matching pair of
      * bookmarkStart and bookmarkEnd tags; thus, using the example above again,
@@ -574,8 +588,8 @@ public class BookMark {
      * start and end tags. If no text is found then a null value will be
      * returned.
      * @throws XmlException Thrown if a problem is encountered parsing the XML
-     * markup recovered from the document in order to construct a CTText
-     * instance which may be required to obtain the bookmarks text.
+     *                      markup recovered from the document in order to construct a CTText
+     *                      instance which may be required to obtain the bookmarks text.
      */
     private StringBuilder getTextFromBookmark() throws XmlException {
         int startBookmarkID = 0;
@@ -644,13 +658,13 @@ public class BookMark {
      * markup for the node to recover it's value.
      *
      * @param node An instance of the Node class that encapsulates a reference
-     * to a node recovered from the document being processed. It should be
-     * passed a reference to a character run - 'w:r' - node.
+     *             to a node recovered from the document being processed. It should be
+     *             passed a reference to a character run - 'w:r' - node.
      * @return An instance of the String class that encapsulates the text
      * recovered from the nodes children, if they are text nodes.
      * @throws XmlException Thrown if a problem is encountered parsing the XML
-     * markup recovered from the document in order to construct the CTText
-     * instance which may be required to obtain the bookmarks text.
+     *                      markup recovered from the document in order to construct the CTText
+     *                      instance which may be required to obtain the bookmarks text.
      */
     private String getTextFromChildNodes(Node node) throws XmlException {
         NodeList childNodes = null;
@@ -698,13 +712,14 @@ public class BookMark {
         XWPFRun readRun = null;
         // Get a list if paragraphs from the table cell and remove any and all.
         paraList = this._tableCell.getParagraphs();
-        for(int i = 0; i < paraList.size(); i++) {
+        for (int i = 0; i < paraList.size(); i++) {
             this._tableCell.removeParagraph(i);
         }
         para = this._tableCell.addParagraph();
         para.createRun().setText(bookmarkValue);
     }
-    public XWPFParagraph getPara(){
+
+    public XWPFParagraph getPara() {
         return this._para;
     }
 }

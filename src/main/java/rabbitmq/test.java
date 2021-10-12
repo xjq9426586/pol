@@ -19,8 +19,9 @@ import java.util.HashMap;
 public class test {
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
     @Test
-    public void test(){
+    public void test() {
 
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("id", "1");

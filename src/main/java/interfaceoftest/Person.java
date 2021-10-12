@@ -1,5 +1,5 @@
 package interfaceoftest;
 
 public interface Person {
-	public String say();
+    public String say();
 }

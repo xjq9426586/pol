@@ -25,9 +25,9 @@ public class MyUtil {
                     .filter(line -> line.startsWith("Index:"))
                     .collect(Collectors.toList());
             c.forEach(e -> {
-                if(e.lastIndexOf("/com") != -1){
+                if (e.lastIndexOf("/com") != -1) {
                     System.out.println(e.substring(e.lastIndexOf("/com")));
-                }else{
+                } else {
                     System.out.println(e.substring(e.lastIndexOf(":") + 1));
                 }
 
@@ -35,7 +35,7 @@ public class MyUtil {
                 //先创建复制文件夹
                 String tempDesPath = desPath + path.substring(0, path.lastIndexOf("/"));
                 File desFilePath = new File(tempDesPath);
-                if(!desFilePath.exists()){
+                if (!desFilePath.exists()) {
                     desFilePath.mkdirs();
                 }
                 //idea 源代码路径

@@ -9,12 +9,12 @@ import annotation.Inject;
  * @Description:
  */
 @Bean
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     @Inject
     private UserDao userDao;
 
     @Override
-    public void test(){
+    public void test() {
         userDao.say();
     }
 }

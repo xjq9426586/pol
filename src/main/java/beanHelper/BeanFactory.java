@@ -30,29 +30,30 @@ public class BeanFactory {
     static {
         Class<BeanFactory> clz = BeanFactory.class;
         Scan scan = clz.getAnnotation(Scan.class);
-        if(scan != null){
+        if (scan != null) {
             String[] packagePath = scan.value();
             initBeanFromAnnotation(packagePath);
-        }else{
+        } else {
             initBeanFromXml();
         }
     }
 
     /**
      * 通过注解方式初始化bean，扫描packagePath下所有加上@Bean注解的类
+     *
      * @param packagePath
      */
-    private static void initBeanFromAnnotation(String[] packagePath){
-        if(beansMap.get() == null){
+    private static void initBeanFromAnnotation(String[] packagePath) {
+        if (beansMap.get() == null) {
             beansMap.set(new HashMap<>());
         }
         for (String path : packagePath) {
             Set<Class<?>> classes = ClassHelper.getClzFromPkg(path);
             for (Class<?> aClass : classes) {
                 Bean beanAnno = aClass.getAnnotation(Bean.class);
-                if(beanAnno != null){
+                if (beanAnno != null) {
                     String beanId = beanAnno.value();
-                    if(StringUtils.isEmpty(beanId)){
+                    if (StringUtils.isEmpty(beanId)) {
                         beanId = getDependenceBeanId(aClass);
                     }
                     try {
@@ -65,16 +66,16 @@ public class BeanFactory {
                     }
                 }
             }
-            beansMap.get();
             dependence(beansMap);
         }
     }
 
     /**
      * 依赖注入
+     *
      * @param beansMap
      */
-    private static void dependence(ThreadLocal<HashMap<String, Object>> beansMap){
+    private static void dependence(ThreadLocal<HashMap<String, Object>> beansMap) {
         Map<String, Object> beans = beansMap.get();
         beans.forEach((beanId, bean) -> {
             Field[] fields = bean.getClass().getDeclaredFields();
@@ -82,22 +83,22 @@ public class BeanFactory {
                 for (Field field : fields) {
                     Annotation[] annotations = field.getAnnotations();
                     for (Annotation annotation : annotations) {
-                        if(annotation instanceof Inject){
+                        if (annotation instanceof Inject) {
                             String value = ((Inject) annotation).value();
                             field.setAccessible(true);
                             Class diClz = field.getType();
                             //注入bean,如果已定义value 则直接取value 作为注入的beanId
                             if (StringUtils.isEmpty(value)) {
                                 //如果注入的是接口，先找到实现类，多个实现类处理
-                                if(diClz.isInterface()){
+                                if (diClz.isInterface()) {
                                     Set<Class<?>> allInterfaceAchieveClass = ClassHelper.getAllInterfaceAchieveClass(diClz);
-                                    if(allInterfaceAchieveClass.size() > 1){
+                                    if (allInterfaceAchieveClass.size() > 1) {
                                         log.error("多个实现类，@Inject 未设置value");
                                         throw new RuntimeException("多个实现类，@Inject 未设置value");
-                                    }else {
+                                    } else {
                                         value = getDependenceBeanId(allInterfaceAchieveClass.iterator().next());
                                     }
-                                }else {
+                                } else {
                                     value = getDependenceBeanId(diClz);
                                 }
                             }
@@ -116,8 +117,8 @@ public class BeanFactory {
     /**
      * 通过xml初始化Bean
      */
-    private static void initBeanFromXml(){
-        if(beansMap.get() == null){
+    private static void initBeanFromXml() {
+        if (beansMap.get() == null) {
             beansMap.set(new HashMap<>());
         }
         ClassPathResource classPathResource = new ClassPathResource("/file/BeanFactory.xml");
@@ -149,7 +150,7 @@ public class BeanFactory {
                 for (Field field : fields) {
                     Annotation[] annotations = field.getAnnotations();
                     for (Annotation annotation : annotations) {
-                        if(annotation instanceof Inject){
+                        if (annotation instanceof Inject) {
                             field.setAccessible(true);
                             //注入bean
                             //TODO 接口注入逻辑
@@ -167,14 +168,15 @@ public class BeanFactory {
         }
     }
 
-    public static Object getBean(String beanName){
+    public static Object getBean(String beanName) {
         return beansMap.get().get(beanName);
     }
 
-    private static String getDependenceBeanId(Class clz){
+    private static String getDependenceBeanId(Class clz) {
         String beanId = StringUtils.uncapitalize(clz.getSimpleName());
         return beanId;
     }
+
     public static void main(String[] args) {
         new BeanFactory();
         UserApiImpl userService = (UserApiImpl) BeanFactory.getBean("userApiImpl");

@@ -16,16 +16,17 @@ public class test {
      */
     public static void main(String[] args) {
         //fill2();
-       // fill3();
+        // fill3();
         fill();
         List<String> paths = mergeDoc2();
         //MergeDoc.mergeDocs(paths, "D:\\merge.docx");
 
     }
-    public static void fill2(){
+
+    public static void fill2() {
         MSWordTool changer = new MSWordTool();
         changer.setTemplate("D:\\secondTemplate.docx");
-        Map<String,String> content = new HashMap<String,String>();
+        Map<String, String> content = new HashMap<String, String>();
         content.put("a", "格式规范、标准统一、利于阅览");
         content.put("b", "规范会议操作、提高会议质量");
         content.put("c", "公司会议、部门之间业务协调会议");
@@ -33,43 +34,45 @@ public class test {
         content.put("d", "**有限公司");
         content.put("e", "机场路2号");
         content.put("f", "3021170207");
-        List<Map<String ,String>> content2 = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> content2 = new ArrayList<Map<String, String>>();
 
-        for(int i = 0; i < 3; i++){
+        for (int i = 0; i < 3; i++) {
             content2.add(content);
         }
         List<CellRange> crs = new ArrayList<>();
-        CellRange cr = new CellRange(0, 0 , 3, content2.size() + 3, 1);
+        CellRange cr = new CellRange(0, 0, 3, content2.size() + 3, 1);
         crs.add(cr);
         changer.fillTableAtBookMark("list", content2, crs);
         changer.saveAs();
 
     }
-    public static void fill3(){
+
+    public static void fill3() {
         long startTime = System.currentTimeMillis();
         MSWordTool changer = new MSWordTool();
         changer.setTemplate("C:\\Users\\Administrator\\Desktop\\审批表.docx");
 
 
         //替换表格标签
-        List<Map<String ,String>> content2 = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> content2 = new ArrayList<Map<String, String>>();
         Map<String, String> table1 = new HashMap<String, String>();
 
         table1.put("opinion", "*月份");
         table1.put("p", "*23");
 
 
-        for(int i = 0; i < 3; i++){
+        for (int i = 0; i < 3; i++) {
             content2.add(table1);
         }
         List<CellRange> crs = new ArrayList<>();
-        changer.fillSpecailTableAtBookMark("opin" ,content2, null);
+        changer.fillSpecailTableAtBookMark("opin", content2, null);
 
         //保存替换后的WORD
         changer.saveAs();
-        System.out.println("time=="+(System.currentTimeMillis() - startTime));
+        System.out.println("time==" + (System.currentTimeMillis() - startTime));
     }
-    public static void fill(){
+
+    public static void fill() {
         long startTime = System.currentTimeMillis();
         MSWordTool changer = new MSWordTool();
         changer.setTemplate("D:\\Word.docx");
@@ -78,7 +81,7 @@ public class test {
         config.put(MSWordTool.REPLACE_FLAG, "abc");
         config.put(MSWordTool.REPLACE_KEYS, new String[]{"Principles", "Purpose", "Scope"});
         changer.setConfig(config);
-        Map<String,String> content = new HashMap<String,String>();
+        Map<String, String> content = new HashMap<String, String>();
         content.put("Principles_abc", "格式规范、标准统一、利于阅览");
         content.put("Purpose_abc", "规范会议操作、提高会议质量");
         content.put("Scope_abc", "公司会议、部门之间业务协调会议");
@@ -99,7 +102,7 @@ public class test {
 
 
         //替换表格标签
-        List<Map<String ,String>> content2 = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> content2 = new ArrayList<Map<String, String>>();
         Map<String, String> table1 = new HashMap<String, String>();
 
         table1.put("MONTH", "*月份");
@@ -111,13 +114,13 @@ public class test {
         table1.put("WORKSHOP", "80分");
         table1.put("TOTAL", "85分");
 
-        for(int i = 0; i < 3; i++){
+        for (int i = 0; i < 3; i++) {
             content2.add(table1);
         }
         List<CellRange> crs = new ArrayList<>();
-        CellRange cr = new CellRange(0, 0 , 2, content2.size() + 2, 1);
+        CellRange cr = new CellRange(0, 0, 2, content2.size() + 2, 1);
         crs.add(cr);
-        changer.fillSpecailTableAtBookMark("Table" ,content2, null);
+        changer.fillSpecailTableAtBookMark("Table", content2, null);
         changer.fillSpecailTableAtBookMark("month", content2, null);
         changer.fillSpecailTableAtBookMark("month1", content2, crs);
 
@@ -131,20 +134,20 @@ public class test {
         table.put("PRICE_2", "0.906");
         table.put("PRICE_3", "0.433");
         table.put("NUM_PRICE", "0.675");
-        changer.replaceText(table,"Table2");
+        changer.replaceText(table, "Table2");
 
         //保存替换后的WORD
         changer.saveAs();
-        System.out.println("time=="+(System.currentTimeMillis() - startTime));
+        System.out.println("time==" + (System.currentTimeMillis() - startTime));
     }
 
 
-    public static List<String> mergeDoc(){
+    public static List<String> mergeDoc() {
 
         List<String> paths = new ArrayList<>();
         MSWordTool changer = new MSWordTool();
         changer.setTemplate("D:\\test.docx");
-        Map<String,String> content = new HashMap<String,String>();
+        Map<String, String> content = new HashMap<String, String>();
         content.put("Principles", "格式规范、标准统一、利于阅览");
         content.put("Purpose", "规范会议操作、提高会议质量");
         content.put("Scope", "公司会议、部门之间业务协调会议");
@@ -173,7 +176,7 @@ public class test {
             table.put("PRICE_2", "0.906");
             table.put("PRICE_3", "0.433");
             table.put("NUM_PRICE", "0.675");
-            changer.replaceText(table,"Table2");
+            changer.replaceText(table, "Table2");
             String path1 = "D:\\p" + j + ".docx";
             changer.saveAs(path1);
             paths.add(path1);
@@ -182,13 +185,13 @@ public class test {
         return paths;
     }
 
-    public static List<String> mergeDoc2(){
+    public static List<String> mergeDoc2() {
         List<String> paths = new ArrayList<>();
         MSWordTool changer = new MSWordTool();
         for (int j = 0; j < 3; j++) {
 
             changer.setTemplate("D:\\test.docx");
-            Map<String,String> content = new HashMap<String,String>();
+            Map<String, String> content = new HashMap<String, String>();
             content.put("Principles", "格式规范、标准统一、利于阅览");
             content.put("Purpose", "规范会议操作、提高会议质量");
             content.put("Scope", "公司会议、部门之间业务协调会议");
